@@ -28,9 +28,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  sqflite: ^2.3.3+1 
+  path:
+  sqflite_common_ffi: ^2.2.5
   flutter:
     sdk: flutter
-
   carousel_slider: ^4.2.1
 
 
@@ -42,6 +44,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

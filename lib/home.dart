@@ -116,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderSide: BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
                     ),
                   ),
+                                        style: TextStyle(color: Colors.white), 
                 ),
                 SizedBox(height: 20.0),
                 const Text(
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: TextField(
                         controller: _team1Controller,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Time 1',
                           hintStyle: TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
                           focusedBorder: UnderlineInputBorder(
@@ -152,20 +153,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           });
                         },
+                                              style: TextStyle(color: Colors.white), 
                       ),
+                      
                     ),
                     SizedBox(width: 20.0),
                     Expanded(
                       child: TextField(
                         style: TextStyle(color: Colors.white),
                         controller: _team2Controller,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Time 2',
                           hintStyle: TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
                           ),
                         ),
+                        
                         onChanged: (value) {
                           setState(() {
                           });
@@ -182,8 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 10.0),
                 GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 4.0,
                     crossAxisSpacing: 20.0,
@@ -243,9 +247,9 @@ class ImageSlider extends StatelessWidget {
   ImageSlider({required this.onIconChange});
 
   final List<IconData> _icons = [
-    Icons.sports_volleyball_rounded,
     Icons.sports_tennis_rounded,
-    Icons.sports_handball_rounded,
+    Icons.circle,
+    Icons.sports_volleyball_rounded,
   ];
 
   @override
