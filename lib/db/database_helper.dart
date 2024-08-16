@@ -4,7 +4,9 @@ import 'package:path/path.dart';
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   static Database? _database;
+
   DatabaseHelper._internal();
+
   factory DatabaseHelper() {
     return _instance;
   }
@@ -25,11 +27,26 @@ class DatabaseHelper {
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    // Criação da tabela teams
     await db.execute(
       'CREATE TABLE teams(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)',
     );
+
+    // Criação da tabela players
     await db.execute(
       'CREATE TABLE players(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, teamId INTEGER, FOREIGN KEY(teamId) REFERENCES teams(id))',
+    );
+
+    // Criação da tabela matches
+    await db.execute(
+      '''CREATE TABLE matches(
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        team1Name TEXT, 
+        team2Name TEXT, 
+        team1Score INTEGER, 
+        team2Score INTEGER, 
+        matchDuration TEXT
+      )''',
     );
   }
 
@@ -41,6 +58,18 @@ class DatabaseHelper {
   Future<int> insertPlayer(String name, int teamId) async {
     Database db = await database;
     return await db.insert('players', {'name': name, 'teamId': teamId});
+  }
+
+  Future<int> insertMatch(String team1Name, String team2Name, int team1Score, int team2Score, String matchDuration, {required String nomePartida}) async {
+    Database db = await database;
+    Map<String, dynamic> matchData = {
+      'team1Name': team1Name,
+      'team2Name': team2Name,
+      'team1Score': team1Score,
+      'team2Score': team2Score,
+      'matchDuration': matchDuration,
+    };
+    return await db.insert('matches', matchData);
   }
 
   Future<List<Map<String, dynamic>>> getTeams() async {

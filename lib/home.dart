@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:matchmaster/PartidaEmAndamento.dart';
 import 'package:matchmaster/main.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -63,7 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             IconButton(
               icon: Icon(Icons.home),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
               color: Colors.black,
             ),
             IconButton(
@@ -179,10 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 SizedBox(height: 20.0),
-                const Text(
-                  'Jogadores:',
-                  style: TextStyle(color: Colors.yellow, fontSize: 16.0),
-                ),
+                
                 SizedBox(height: 10.0),
                 GridView.builder(
                   shrinkWrap: true,
@@ -220,12 +223,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      //  salvar a partida
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 229, 255, 0),
-                      padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
-                    ),
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PartidaEmAndamento(
+                                    team1Name: _team1Controller.text,
+                                    team2Name: _team2Controller.text,
+                                  ),
+                                ),
+                              );
+                            },
                     child: const Text(
                       'Salvar',
                       style: TextStyle(color: Colors.black),
