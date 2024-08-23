@@ -38,17 +38,36 @@ class DatabaseHelper {
     );
 
     // Criação da tabela matches
-    await db.execute(
-      '''CREATE TABLE matches(
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        team1Name TEXT, 
-        team2Name TEXT, 
-        team1Score INTEGER, 
-        team2Score INTEGER, 
-        matchDuration TEXT
-      )''',
+Future<void> _onCreate(Database db, int version) async {
+  // ...
+  await db.execute(
+    '''CREATE TABLE matches(
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      team1Name TEXT, 
+      team2Name TEXT, 
+      team1Score INTEGER, 
+      team2Score INTEGER, 
+      matchDuration TEXT,
+      nomePartida TEXT
+    )''',
+  );
+}
+
+  Future<int> insertMatch(String team1Name, String team2Name, int team1Score, int team2Score, String matchDuration, String nomePartida) async {
+    final db = await database;
+    return await db.insert(
+      'matches',
+      {
+        'team1Name': team1Name,
+        'team2Name': team2Name,
+        'team1Score': team1Score,
+        'team2Score': team2Score,
+        'matchDuration': matchDuration,
+        'nomePartida': nomePartida,
+      },
     );
   }
+}
 
   Future<int> insertTeam(String name) async {
     Database db = await database;
@@ -62,13 +81,14 @@ class DatabaseHelper {
 
   Future<int> insertMatch(String team1Name, String team2Name, int team1Score, int team2Score, String matchDuration, {required String nomePartida}) async {
     Database db = await database;
-    Map<String, dynamic> matchData = {
-      'team1Name': team1Name,
-      'team2Name': team2Name,
-      'team1Score': team1Score,
-      'team2Score': team2Score,
-      'matchDuration': matchDuration,
-    };
+      Map<String, dynamic> matchData = {
+        'team1Name': team1Name,
+        'team2Name': team2Name,
+        'team1Score': team1Score,
+        'team2Score': team2Score,
+        'matchDuration': matchDuration,
+        'nomePartida': nomePartida,
+      };
     return await db.insert('matches', matchData);
   }
 

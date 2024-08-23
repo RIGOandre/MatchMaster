@@ -66,9 +66,10 @@ class _PartidaEmAndamentoState extends State<PartidaEmAndamento> {
     await DatabaseHelper().insertMatch(
       widget.team1Name,
       widget.team2Name,
-      team1Score.toString() as int,
-      team2Score.toString() as int,
-      matchDuration, nomePartida: '',
+      int.parse(team1Score.toString()),
+      int.parse(team2Score.toString()),
+      matchDuration,
+      nomePartida: '', 
     );
 
     ScaffoldMessenger.of(context).showSnackBar(

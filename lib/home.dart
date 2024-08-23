@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:matchmaster/PartidaEmAndamento.dart';
+import 'package:matchmaster/db/database_helper.dart';
 import 'package:matchmaster/main.dart';
+import 'package:matchmaster/usuario.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -74,7 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             IconButton(
               icon: Icon(Icons.person),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserScreen()),
+                );
+              },
               color: Colors.black,
             ),
           ],
@@ -221,23 +228,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 20.0),
                 Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PartidaEmAndamento(
-                                    team1Name: _team1Controller.text,
-                                    team2Name: _team2Controller.text,
-                                  ),
-                                ),
-                              );
-                            },
-                    child: const Text(
-                      'Salvar',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
+                  child:
+                    ElevatedButton(
+                      onPressed: () async {
+                      final databaseHelper = DatabaseHelper();
+                      await databaseHelper.insertMatch(
+                        nomePartida: 'Partida 1',
+                        _team1Controller.text,
+                        _team2Controller.text,
+                        0,
+                        0,
+                        '00:00',
+                      );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PartidaEmAndamento(
+                            team1Name: _team1Controller.text,
+                            team2Name: _team2Controller.text,
+                          )
+                        ),
+                        );
+                      },
+                      child: const Text(
+                        'Salvar',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    )
                 ),
               ],
             ),
