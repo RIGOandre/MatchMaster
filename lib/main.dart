@@ -96,26 +96,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 16,
                         ),
                       ),
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     SizedBox(height: 30),
                     TextField(
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: 'Senha',
-                        hintStyle: TextStyle(color: const Color.fromARGB(209, 255, 235, 59)),
+                        hintStyle: const TextStyle(color: const Color.fromARGB(209, 255, 235, 59)),
                         filled: true,
                         fillColor: Color.fromARGB(255, 8, 8, 8),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 16,
                         ),
@@ -141,8 +141,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Text(
+                        const SizedBox(width: 8),
+                        const Text(
                           'Lembrar de mim',
                           style: TextStyle(color: Colors.yellow),
                         ),
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Entrar',
                         style: TextStyle(fontSize: 18, color: Colors.black),
                       ),
@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 80),
                     TextButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         'Esqueci minha senha',
                         style: TextStyle(color: Colors.yellow),
                       ),

@@ -73,7 +73,7 @@ class _PartidaEmAndamentoState extends State<PartidaEmAndamento> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Partida salva com sucesso!')),
+      const SnackBar(content: Text('Partida salva com sucesso!')),
     );
 
     Navigator.pop(context);
@@ -106,7 +106,7 @@ class _PartidaEmAndamentoState extends State<PartidaEmAndamento> {
             children: [
               _buildScoreColumn(widget.team1Name, team1Score, () => _incrementScore(1), () => _decrementScore(1)),
               Text(
-                'GIF',
+                'GIF', //add gif
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
               _buildScoreColumn(widget.team2Name, team2Score, () => _incrementScore(2), () => _decrementScore(2)),

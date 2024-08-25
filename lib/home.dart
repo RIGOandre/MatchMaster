@@ -40,8 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _team1Controller.dispose();
     _team2Controller.dispose();
-    _team1PlayersControllers.forEach((controller) => controller.dispose());
-    _team2PlayersControllers.forEach((controller) => controller.dispose());
+    for (var controller in _team1PlayersControllers) {
+      controller.dispose();
+    }
+    for (var controller in _team2PlayersControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -213,8 +217,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           : _team2PlayersControllers[playerIndex],
                       decoration: InputDecoration(
                         hintText: 'Jogador ${playerIndex + 1} - Time $teamIndex',
-                        hintStyle: TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
-                        focusedBorder: UnderlineInputBorder(
+                        hintStyle: const TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
                         ),
                       ),

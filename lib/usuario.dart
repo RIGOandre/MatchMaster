@@ -90,7 +90,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Widget _buildProfileSection() {
-    return Row(
+    return const Row(
       children: [
         CircleAvatar(
           radius: 50,
@@ -113,7 +113,7 @@ class _UserScreenState extends State<UserScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Gráfico de Pontos
+        // Gráfico de Pontos add s
         Container(
           width: 170,
           height: 200,
@@ -121,7 +121,7 @@ class _UserScreenState extends State<UserScreen> {
             color: Colors.grey[850],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('50 pontos', style: TextStyle(fontSize: 16, color: Colors.yellow)),
@@ -138,7 +138,7 @@ class _UserScreenState extends State<UserScreen> {
             color: Colors.grey[850],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               '#1',
               style: TextStyle(fontSize: 40, color: Colors.yellow),
@@ -158,7 +158,7 @@ class _UserScreenState extends State<UserScreen> {
           return Card(
             color: Colors.grey[900],
             child: ListTile(
-              leading: Icon(Icons.sports_soccer, color: Colors.yellow),
+              leading: const Icon(Icons.sports_soccer, color: Colors.yellow),
               title: Text('Partida contra ${match['team2Name']}', style: TextStyle(color: Colors.yellow)),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class _UserScreenState extends State<UserScreen> {
                   Text('${match['team1Score']} vs ${match['team2Score']}', style: TextStyle(color: Colors.white)),
                 ],
               ),
-              trailing: Text('Vitória', style: TextStyle(color: Colors.green)),
+              trailing: const Text('Vitória', style: TextStyle(color: Colors.green)),
             ),
           );
         },
