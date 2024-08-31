@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           });
                         },
-                                              style: TextStyle(color: Colors.white), 
+                        style: TextStyle(color: Colors.white), 
                       ),
                       
                     ),
@@ -233,31 +233,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 20.0),
                 Center(
                   child:
-                    ElevatedButton(
-                      onPressed: () async {
-                      final databaseHelper = DatabaseHelper();
-                      await databaseHelper.insertMatch(
-                        nomePartida: 'Partida 1',
-                        _team1Controller.text,
-                        _team2Controller.text,
-                        0,
-                        0,
-                        '00:00',
-                      );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PartidaEmAndamento(
-                            team1Name: _team1Controller.text,
-                            team2Name: _team2Controller.text,
-                          )
-                        ),
-                        );
-                      },
-                      child: const Text(
-                        'Salvar',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    )
+ElevatedButton(
+  onPressed: () async {
+    try {
+      final databaseHelper = DatabaseHelper();
+      await databaseHelper.insertMatch(
+        _team1Controller.text, 
+        _team2Controller.text, 
+        0, 
+        0, 
+        '00:00', 
+        'Jogador1, Jogador2', 
+        'Jogador3, Jogador4', 
+        'Empate', 
+        nomePartida: 'Partida 1', 
+      );
+      print('Deu Boa');
+    } catch (e) {
+      print('Deu bosta: $e');
+    }
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => PartidaEmAndamento(
+          team1Name: _team1Controller.text,
+          team2Name: _team2Controller.text,
+          team1Players: _team1PlayersControllers.map((controller) => controller.text).toList(),
+          team2Players: _team2PlayersControllers.map((controller) => controller.text).toList(),
+        ),
+      ),
+      (Route<dynamic> route) => false,
+    );
+  },
+  child: const Text(
+    'Salvar',
+    style: TextStyle(color: Colors.black),
+  ),
+)
                 ),
               ],
             ),
@@ -347,3 +358,4 @@ class PlayerNumberSelection extends StatelessWidget {
     );
   }
 }
+

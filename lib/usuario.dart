@@ -10,20 +10,30 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   List<Map<String, dynamic>> _completedMatches = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _fetchCompletedMatches();
   }
-
   Future<void> _fetchCompletedMatches() async {
-    DatabaseHelper dbHelper = DatabaseHelper();
-    final db = await dbHelper.database;
-    List<Map<String, dynamic>> matches = await db.query('matches');
     setState(() {
-      _completedMatches = matches;
+      _isLoading = true;
     });
+     {
+      DatabaseHelper dbHelper = DatabaseHelper();
+      final db = await dbHelper.database;
+      List<Map<String, dynamic>> matches = await db.query('matches');
+      setState(() {
+        _completedMatches = matches;
+        _isLoading = false;
+      });
+    } 
+      setState(() {
+        _isLoading = false;
+      });
+
   }
 
   @override
@@ -150,28 +160,27 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Widget _buildMatchesSection() {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: _completedMatches.length,
-        itemBuilder: (context, index) {
-          final match = _completedMatches[index];
-          return Card(
-            color: Colors.grey[900],
-            child: ListTile(
-              leading: const Icon(Icons.sports_soccer, color: Colors.yellow),
-              title: Text('Partida contra ${match['team2Name']}', style: TextStyle(color: Colors.yellow)),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${match['nomePartida']}', style: TextStyle(color: Colors.white)),
-                  Text('${match['team1Score']} vs ${match['team2Score']}', style: TextStyle(color: Colors.white)),
-                ],
-              ),
-              trailing: const Text('Vitória', style: TextStyle(color: Colors.green)),
-            ),
-          );
-        },
-      ),
-    );
-  }
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (_completedMatches.isEmpty) {
+      return Text('Nenhuma partida encontrada');
+    } else {
+      return Expanded(
+        child: ListView.builder(
+          itemCount: _completedMatches.length,
+          itemBuilder: (context, index) {
+            final match = _completedMatches[index];
+            return ListTile(
+              title: Text('Partida: ${match['team1Name']} vs ${match['team2Name']}'),
+          subtitle: Text('Duração: ${match['matchDuration']}, Vencedor: ${match['winner']}\n'
+              'Jogadores do ${match['team1Name']}: ${match['team1Players']}\n'
+              'Jogadores do ${match['team2Name']}: ${match['team2Players']}'),
+        );
+      },
+    ),
+  );
+}
+}
 }
