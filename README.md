@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/Status-Active-green" alt="Active Development Badge">
 </p>
 
----
+
 
 <h2 align="center">Do que se trata o MatchMaster</h2>
 
@@ -18,7 +18,7 @@
   O <strong>MatchMaster</strong> é um aplicativo desenvolvido em <strong>Flutter</strong> para gerenciar partidas de esportes como <strong>Tênis</strong>, <strong>Tênis de Mesa</strong>, e <strong>Vôlei</strong>. Ele permite criar, acompanhar e salvar partidas, exibindo informações detalhadas sobre os times, jogadores, e resultados. O app oferece funcionalidades de cronometragem em tempo real durante as partidas e permite salvar o histórico de confrontos, que pode ser filtrado por esporte, garantindo fácil navegação para rever ou excluir resultados anteriores.
 </p>
 
----
+
 
 <h2 align="center">🎮 Funcionalidades Principais 🎮</h2>
 
@@ -37,7 +37,7 @@
   <strong>MatchMaster</strong> is a <strong>Flutter-based</strong> app designed to manage sports matches like <strong>Tennis</strong>, <strong>Table Tennis</strong>, and <strong>Volleyball</strong>. It allows users to create, track, and save matches while displaying detailed information about teams, players, and results. The app offers real-time match timing and score tracking and saves match histories that can be filtered by sport, making it easy to review or delete past results.
 </p>
 
----
+
 
 <h2 align="center">🌟 Key Features 🌟</h2>
 
