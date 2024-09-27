@@ -316,8 +316,8 @@ class ImageSlider extends StatelessWidget {
             return Image.asset(
               path,
               fit: BoxFit.contain,
-              height: 200,
-              width: 200,
+              height: 180,
+              width: 180,
             );
           },
         );
@@ -345,11 +345,11 @@ class PlayerNumberSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     List<int> options;
     if (selectedIndex == 0) {
-      options = [1 ,2, 4];
+      options = [ 1, 2];
     } else if (selectedIndex == 1) {
       options = [1, 2];
     } else {
-      options = [2, 4, 6];
+      options = [ 4, 6];
     }
 
     return Row(
