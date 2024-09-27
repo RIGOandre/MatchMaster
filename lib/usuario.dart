@@ -8,6 +8,7 @@ class UserScreen extends StatefulWidget {
   _UserScreenState createState() => _UserScreenState();
 }
 
+
 class _UserScreenState extends State<UserScreen> {
   List<Map<String, dynamic>> _completedMatches = [];
   List<Map<String, dynamic>> _filteredMatches = []; 
