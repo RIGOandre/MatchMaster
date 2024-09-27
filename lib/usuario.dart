@@ -10,7 +10,11 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   List<Map<String, dynamic>> _completedMatches = [];
+  List<Map<String, dynamic>> _filteredMatches = []; 
+  String? _selectedSport = 'Todos'; 
   bool _isLoading = false;
+
+  final List<String> _sports = ['Todos', 'Tênis', 'Tênis de Mesa', 'Vôlei']; 
 
   @override
   void initState() {
@@ -22,22 +26,34 @@ class _UserScreenState extends State<UserScreen> {
     setState(() {
       _isLoading = true;
     });
-    {
-      DatabaseHelper dbHelper = DatabaseHelper();
-      final db = await dbHelper.database;
-      List<Map<String, dynamic>> matches = await db.query('matches');
-      setState(() {
-        _completedMatches = matches;
-        _isLoading = false;
-      });
-    }
+    DatabaseHelper dbHelper = DatabaseHelper();
+    final db = await dbHelper.database;
+    List<Map<String, dynamic>> matches = await db.query('matches');
+    setState(() {
+      _completedMatches = matches;
+      _filteredMatches = matches;
+      _isLoading = false;
+    });
   }
 
   Future<void> _deleteMatch(int id) async {
     DatabaseHelper dbHelper = DatabaseHelper();
     final db = await dbHelper.database;
     await db.delete('matches', where: 'id = ?', whereArgs: [id]);
-    _fetchCompletedMatches(); 
+    _fetchCompletedMatches();
+  }
+
+  void _filterMatches(String? sport) {
+    setState(() {
+      _selectedSport = sport;
+      if (sport == null || sport == 'Todos') {
+        _filteredMatches = _completedMatches; 
+      } else {
+        _filteredMatches = _completedMatches
+            .where((match) => match['sport'] == sport)
+            .toList();
+      }
+    });
   }
 
   @override
@@ -55,8 +71,10 @@ class _UserScreenState extends State<UserScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProfileSection(),
+            // SizedBox(height: 20),
+            // _buildPerformanceSection(),
             SizedBox(height: 20),
-            _buildPerformanceSection(),
+            _buildSportFilter(), 
             SizedBox(height: 20),
             _buildMatchesSection(), 
           ],
@@ -103,20 +121,12 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-
-
-
-
   Widget _buildProfileSection() {
     return const Row(
       children: [
         CircleAvatar(
           radius: 50,
           backgroundColor: Colors.yellow,
-          child: Text(
-            'M', 
-            style: TextStyle(fontSize: 20, color: Colors.black),
-          ),
         ),
         SizedBox(width: 10),
         Text(
@@ -127,60 +137,78 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  Widget _buildPerformanceSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          width: 170,
-          height: 200,
-          decoration: BoxDecoration(
-            color: Colors.grey[850],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('50 pontos', style: TextStyle(fontSize: 16, color: Colors.yellow)),
-              SizedBox(height: 5),
-              Text('50% WIN\n100 Partidas', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.yellow)),
-            ],
-          ),
-        ),
-        Container(
-          width: 170,
-          height: 200,
-          decoration: BoxDecoration(
-            color: Colors.grey[850],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Center(
-            child: Text(
-              '#1',
-              style: TextStyle(fontSize: 40, color: Colors.yellow),
-            ),
-          ),
-        ),
-      ],
+  // Widget _buildPerformanceSection() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //     children: [
+  //       Container(
+  //         width: 170,
+  //         height: 200,
+  //         decoration: BoxDecoration(
+  //           color: Colors.grey[850],
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         child: const Column(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Text('1 ponto', style: TextStyle(fontSize: 16, color: Colors.yellow)),
+  //             SizedBox(height: 5),
+  //             Text('100% WIN\n1 Partida', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.yellow)),
+  //           ],
+  //         ),
+  //       ),
+  //       Container(
+  //         width: 170,
+  //         height: 200,
+  //         decoration: BoxDecoration(
+  //           color: Colors.grey[850],
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         child: const Center(
+  //           child: Text(
+  //             '#1',
+  //             style: TextStyle(fontSize: 40, color: Colors.yellow),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildSportFilter() {
+    return DropdownButton<String>(
+      value: _selectedSport ?? 'Todos', 
+      dropdownColor: Colors.black,
+      style: const TextStyle(color: Colors.yellow),
+      iconEnabledColor: Colors.yellow,
+      items: _sports.map((String sport) {
+        return DropdownMenuItem<String>(
+          value: sport,
+          child: Text(sport),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        _filterMatches(newValue); 
+      },
     );
   }
 
   Widget _buildMatchesSection() {
     if (_isLoading) {
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(),
       );
-    } else if (_completedMatches.isEmpty) {
-      return Text('Nenhuma partida encontrada', style: TextStyle(color: Colors.white));
+    } else if (_filteredMatches.isEmpty) {
+      return const Text('Nenhuma partida encontrada', style: TextStyle(color: Colors.white));
     } else {
       return Expanded(
         child: ListView.builder(
-          itemCount: _completedMatches.length,
+          itemCount: _filteredMatches.length,
           itemBuilder: (context, index) {
-            final match = _completedMatches[index];
+            final match = _filteredMatches[index];
             return Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              padding: EdgeInsets.all(16),
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              padding:const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.black,
                 borderRadius: BorderRadius.circular(10),
@@ -194,47 +222,47 @@ class _UserScreenState extends State<UserScreen> {
                     children: [
                       Text(
                         'Partida: ${match['team1Name']} vs ${match['team2Name']}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.yellow, 
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red), 
+                        icon:const Icon(Icons.delete, color: Colors.red), 
                         onPressed: () {
                           _deleteMatch(match['id']); 
                         },
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox (height: 8),
                   Text(
-                    'Esporte: ${match['tipoEsporte'] ?? 'Não especificado'}',
-                    style: TextStyle(color: Colors.white),
+                    'Esporte: ${match['sport'] ?? 'Não especificado'}',
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     'Duração: ${match['matchDuration']}',
-                    style: TextStyle(color: Colors.white),
+                    style:const TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     'Vencedor: ${match['winner']}',
-                    style: TextStyle(
+                    style:const TextStyle(
                       color: Colors.yellow, 
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     'Jogadores do ${match['team1Name']}: ${match['team1Players']}',
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     'Jogadores do ${match['team2Name']}: ${match['team2Players']}',
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
               ),

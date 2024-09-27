@@ -169,13 +169,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: 80),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Esqueci minha senha',
-                        style: TextStyle(color: Colors.yellow),
-                      ),
-                    ),
                   ],
                 ),
               ),

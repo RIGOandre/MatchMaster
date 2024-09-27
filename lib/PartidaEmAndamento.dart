@@ -10,12 +10,14 @@ class PartidaEmAndamento extends StatefulWidget {
   final String team2Name;
   final List<String> team1Players; 
   final List<String> team2Players; 
+  final String sport;
 
   PartidaEmAndamento({
     required this.team1Name,
     required this.team2Name,
     required this.team1Players,
     required this.team2Players,
+    required this.sport
   });
 
   @override
@@ -68,26 +70,33 @@ class _PartidaEmAndamentoState extends State<PartidaEmAndamento> {
     });
   }
 
-  Future<void> _saveMatch() async {
-    _timer.cancel(); 
-    String matchDuration = _formatTime(_seconds); 
-    String team1Players = widget.team1Players.join(', ');
-    String team2Players = widget.team2Players.join(', ');
+Future<void> _saveMatch() async {
+  _timer.cancel(); 
+  String matchDuration = _formatTime(_seconds); 
+  String team1Players = widget.team1Players.join(', ');
+  String team2Players = widget.team2Players.join(', ');
 
-    String winner;
-    if (team1Score > team2Score) {
-      winner = widget.team1Name;
-    } else if (team2Score > team1Score) {
-      winner = widget.team2Name;
-    } else {
-      winner = 'Empate';
-    }
+  String winner;
+  if (team1Score > team2Score) {
+    winner = widget.team1Name;
+  } else if (team2Score > team1Score) {
+    winner = widget.team2Name;
+  } else {
+    winner = 'Empate';
+  }
 
+  try {
     await DatabaseHelper().insertMatch(
-      widget.team1Name, widget.team2Name,
-      team1Score, team2Score, matchDuration,
-      team1Players, team2Players, winner,
+      widget.team1Name,
+      widget.team2Name,
+      team1Score,
+      team2Score,
+      matchDuration,
+      team1Players,
+      team2Players,
       nomePartida: 'Nome da Partida',
+      winner,
+      widget.sport
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +107,13 @@ class _PartidaEmAndamentoState extends State<PartidaEmAndamento> {
       context,
       MaterialPageRoute(builder: (context) => UserScreen()),
     );
+  } catch (e) {
+    print('Erro ao salvar a partida: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erro ao salvar a partida: $e')),
+    );
   }
+}
 
   @override
   void dispose() {
@@ -155,10 +170,10 @@ class _PartidaEmAndamentoState extends State<PartidaEmAndamento> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildScoreColumn(widget.team1Name, team1Score, () => _incrementScore(1), () => _decrementScore(1)),
-              Image.network(
-                'https://media.giphy.com/media/3o7TKsQ9tGkBf81DW0/giphy.gif',
-                height: 60,
-              ),
+              // Image.network(
+              //   'https://media.giphy.com/media/3o7TKsQ9tGkBf81DW0/giphy.gif',
+              //   height: 60,
+              // ),
               _buildScoreColumn(widget.team2Name, team2Score, () => _incrementScore(2), () => _decrementScore(2)),
             ],
           ),
@@ -202,11 +217,11 @@ class _PartidaEmAndamentoState extends State<PartidaEmAndamento> {
           children: [
             IconButton(
               onPressed: increment,
-              icon: Icon(Icons.add_circle, color: Colors.yellow, size: 48),
+              icon: Icon(Icons.add_outlined, color: Colors.yellow, size: 48),
             ),
             IconButton(
               onPressed: decrement,
-              icon: Icon(Icons.remove_circle, color: Colors.yellow, size: 48),
+              icon: Icon(Icons.remove, color: Colors.yellow, size: 48),
             ),
           ],
         ),

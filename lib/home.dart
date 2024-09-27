@@ -13,26 +13,36 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   int _selectedPlayers = 2;
+  String _selectedSport = 'Tênis';
   final TextEditingController _team1Controller = TextEditingController();
   final TextEditingController _team2Controller = TextEditingController();
-  final List<TextEditingController> _team1PlayersControllers = [];
-  final List<TextEditingController> _team2PlayersControllers = [];
+  final List<TextEditingController> _team1PlayersControllers =
+      List.generate(6, (index) => TextEditingController());
+  final List<TextEditingController> _team2PlayersControllers =
+      List.generate(6, (index) => TextEditingController());
 
   void _updatePlayerOptions(int index) {
     setState(() {
       _selectedIndex = index;
+      _selectedPlayers = index == 0 || index == 1 ? 2 : 2;
+    });
+  }
+
+  void _updateSport(int index) {
+    setState(() {
+      if (index == 0) {
+        _selectedSport = 'Tênis';
+      } else if (index == 1) {
+        _selectedSport = 'Tênis de Mesa';
+      } else {
+        _selectedSport = 'Vôlei';
+      }
     });
   }
 
   void _selectPlayers(int players) {
     setState(() {
       _selectedPlayers = players;
-      _team1PlayersControllers.clear();
-      _team2PlayersControllers.clear();
-      for (int i = 0; i < players; i++) {
-        _team1PlayersControllers.add(TextEditingController());
-        _team2PlayersControllers.add(TextEditingController());
-      }
     });
   }
 
@@ -100,17 +110,18 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const Row(
                   children: [
-                    CircleAvatar(
-                      radius: 30.0,
-                      backgroundColor: Color.fromARGB(255, 238, 255, 3),
-                      child: Icon(Icons.person, color: Colors.black),
-                    ),
-                    SizedBox(width: 18.0),
-                    Text(
-                      'André Rigo',
-                      style: TextStyle(color: Colors.yellow, fontSize: 16.0),
-                    ),
-                  ],
+                  //   CircleAvatar(
+                  //     radius: 30.0,
+                  //     backgroundColor: Color.fromARGB(255, 238, 255, 3),
+                  //     child: Icon(Icons.person, color: Colors.black),
+                  //   ),
+                  //   SizedBox(width: 18.0),
+                  //   Text(
+                  //     'André Rigo',
+                  //     style: TextStyle(color: Colors.yellow, fontSize: 16.0),
+                  //   ),
+                  // 
+                  ]
                 ),
                 const SizedBox(height: 60),
                 const Center(
@@ -118,14 +129,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Crie uma partida',
                     style: TextStyle(
                       color: Color(0xFFFFDE5B),
-                      fontSize: 24.0,
+                      fontSize: 30.0,
                     ),
                   ),
                 ),
                 SizedBox(height: 60),
                 Center(
-                    child: ImageSlider(onIconChange: _updatePlayerOptions)),
+                  child: ImageSlider(
+                    onIconChange: (index) {
+                      _updatePlayerOptions(index);
+                      _updateSport(index);
+                    },
+                  ),
+                ),
                 SizedBox(height: 16.0),
+
+
                 const TextField(
                   decoration: InputDecoration(
                     hintText: 'Nome da partida',
@@ -135,8 +154,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white), //a
                 ),
+
+
                 SizedBox(height: 20.0),
                 const Text(
                   'Jogadores em cada time:',
@@ -160,25 +181,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: TextField(
                         controller: _team1Controller,
+
                         decoration: const InputDecoration(
                           hintText: 'Time 1',
                           hintStyle:
                               TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color.fromARGB(255, 229, 255, 0)),
+                                color: Color.fromARGB(255, 255, 255, 255)),
                           ),
                         ),
+                        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                         onChanged: (value) {
                           setState(() {});
                         },
-                        style: TextStyle(color: Colors.white),
                       ),
+                      
                     ),
                     SizedBox(width: 20.0),
                     Expanded(
                       child: TextField(
-                        style: TextStyle(color: Colors.white),
                         controller: _team2Controller,
                         decoration: const InputDecoration(
                           hintText: 'Time 2',
@@ -186,12 +208,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color.fromARGB(255, 229, 255, 0)),
+                                color: Color.fromARGB(255, 255, 255, 255)),
                           ),
                         ),
+                        style: TextStyle(color: Colors.white),
                         onChanged: (value) {
                           setState(() {});
                         },
+                        
                       ),
                     ),
                   ],
@@ -222,9 +246,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Color.fromARGB(255, 229, 255, 0)),
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromARGB(255, 229, 255, 0)),
+                              color: Color.fromARGB(255, 255, 255, 255)),
                         ),
                       ),
+                      style: TextStyle(color: Colors.white),
                       onChanged: (value) {
                         setState(() {});
                       },
@@ -234,6 +259,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 20.0),
                 Center(
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.yellow, backgroundColor: Colors.black,
+                    side: BorderSide(color: Colors.yellow, width: 2),),
                     onPressed: () async {
                       try {
                         Navigator.push(
@@ -242,12 +270,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context) => PartidaEmAndamento(
                               team1Name: _team1Controller.text,
                               team2Name: _team2Controller.text,
-                              team1Players: _team1PlayersControllers
-                                  .map((controller) => controller.text)
-                                  .toList(),
-                              team2Players: _team2PlayersControllers
-                                  .map((controller) => controller.text)
-                                  .toList(),
+                              team1Players: _team1PlayersControllers.map((controller) => controller.text).toList(),
+                              team2Players: _team2PlayersControllers.map((controller) => controller.text).toList(),
+                              sport: _selectedSport,
                             ),
                           ),
                         );
@@ -257,7 +282,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: const Text(
                       'Salvar',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Color.fromARGB(255, 230, 255, 7)),
+                      
                     ),
                   ),
                 ),
@@ -319,7 +345,7 @@ class PlayerNumberSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     List<int> options;
     if (selectedIndex == 0) {
-      options = [2, 4];
+      options = [1 ,2, 4];
     } else if (selectedIndex == 1) {
       options = [1, 2];
     } else {
@@ -327,13 +353,16 @@ class PlayerNumberSelection extends StatelessWidget {
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: options.map((players) {
-        return ElevatedButton(
-          onPressed: () => onPlayersSelected(players),
-          child: Text('$players Jogadores'),
-        );
-      }).toList(),
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: options.map((players) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.yellow, backgroundColor: Colors.black,
+        side: BorderSide(color: Colors.yellow, width: 1),
+      ),
+      onPressed: () => onPlayersSelected(players),
+      child: Text('$players Jogadores'),
     );
-  }
-} 
+  }).toList(),
+  );
+  }}

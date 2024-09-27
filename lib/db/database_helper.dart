@@ -34,39 +34,42 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'matchmaster.db');
+    String path = join(await getDatabasesPath(), 'matchmasterrr.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, //v2
       onCreate: _onCreate,
+
     );
   }
 
-Future<void> _onCreate(Database db, int version) async {
-  await db.execute(
-    'CREATE TABLE teams(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)',
-  );
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute(
+      'CREATE TABLE teams(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)',
+    );
 
-  await db.execute(
-    'CREATE TABLE players(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, teamId INTEGER, FOREIGN KEY(teamId) REFERENCES teams(id))',
-  );
+    await db.execute(
+      'CREATE TABLE players(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, teamId INTEGER, FOREIGN KEY(teamId) REFERENCES teams(id))',
+    );
 
 
-  await db.execute(
-    '''CREATE TABLE matches(
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        team1Name TEXT, 
-        team2Name TEXT, 
-        team1Score INTEGER, 
-        team2Score INTEGER, 
-        matchDuration TEXT,
-        nomePartida TEXT,
-        team1Players TEXT,
-        team2Players TEXT,
-        winner TEXT,
-    )''',
-  );
-}
+    await db.execute(
+      '''CREATE TABLE matches(
+          id INTEGER PRIMARY KEY AUTOINCREMENT, 
+          team1Name TEXT, 
+          team2Name TEXT, 
+          team1Score INTEGER, 
+          team2Score INTEGER, 
+          matchDuration TEXT,
+          nomePartida TEXT,
+          team1Players TEXT,
+          team2Players TEXT,
+          winner TEXT,
+          sport TEXT
+      )''',
+    );
+  }
+
 
 
   Future<int> insertMatch(
@@ -78,7 +81,8 @@ Future<void> _onCreate(Database db, int version) async {
     String team1Players,
     String team2Players,
     String winner,
-    {required String nomePartida}
+    String sport,
+    {required String nomePartida,}
   ) async {
     final db = await database;
     return await db.insert(
@@ -93,6 +97,7 @@ Future<void> _onCreate(Database db, int version) async {
         'team1Players': team1Players,
         'team2Players': team2Players,
         'winner': winner,
+        'sport': sport,
       },
     );
   }
