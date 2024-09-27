@@ -17,11 +17,12 @@ class _UserScreenState extends State<UserScreen> {
     super.initState();
     _fetchCompletedMatches();
   }
+
   Future<void> _fetchCompletedMatches() async {
     setState(() {
       _isLoading = true;
     });
-     {
+    {
       DatabaseHelper dbHelper = DatabaseHelper();
       final db = await dbHelper.database;
       List<Map<String, dynamic>> matches = await db.query('matches');
@@ -29,11 +30,14 @@ class _UserScreenState extends State<UserScreen> {
         _completedMatches = matches;
         _isLoading = false;
       });
-    } 
-      setState(() {
-        _isLoading = false;
-      });
+    }
+  }
 
+  Future<void> _deleteMatch(int id) async {
+    DatabaseHelper dbHelper = DatabaseHelper();
+    final db = await dbHelper.database;
+    await db.delete('matches', where: 'id = ?', whereArgs: [id]);
+    _fetchCompletedMatches(); 
   }
 
   @override
@@ -51,10 +55,10 @@ class _UserScreenState extends State<UserScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProfileSection(),
-            SizedBox(height: 60),
+            SizedBox(height: 20),
             _buildPerformanceSection(),
-            SizedBox(height: 60),
-            _buildMatchesSection(),
+            SizedBox(height: 20),
+            _buildMatchesSection(), 
           ],
         ),
       ),
@@ -99,6 +103,10 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+
+
+
+
   Widget _buildProfileSection() {
     return const Row(
       children: [
@@ -110,7 +118,7 @@ class _UserScreenState extends State<UserScreen> {
             style: TextStyle(fontSize: 20, color: Colors.black),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(width: 10),
         Text(
           'André Rigo', 
           style: TextStyle(fontSize: 24, color: Colors.yellow),
@@ -123,7 +131,6 @@ class _UserScreenState extends State<UserScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Gráfico de Pontos add s
         Container(
           width: 170,
           height: 200,
@@ -140,7 +147,6 @@ class _UserScreenState extends State<UserScreen> {
             ],
           ),
         ),
-        // Ranking
         Container(
           width: 170,
           height: 200,
@@ -165,22 +171,77 @@ class _UserScreenState extends State<UserScreen> {
         child: CircularProgressIndicator(),
       );
     } else if (_completedMatches.isEmpty) {
-      return Text('Nenhuma partida encontrada');
+      return Text('Nenhuma partida encontrada', style: TextStyle(color: Colors.white));
     } else {
       return Expanded(
         child: ListView.builder(
           itemCount: _completedMatches.length,
           itemBuilder: (context, index) {
             final match = _completedMatches[index];
-            return ListTile(
-              title: Text('Partida: ${match['team1Name']} vs ${match['team2Name']}'),
-          subtitle: Text('Duração: ${match['matchDuration']}, Vencedor: ${match['winner']}\n'
-              'Jogadores do ${match['team1Name']}: ${match['team1Players']}\n'
-              'Jogadores do ${match['team2Name']}: ${match['team2Players']}'),
-        );
-      },
-    ),
-  );
-}
-}
+            return Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.yellow),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Partida: ${match['team1Name']} vs ${match['team2Name']}',
+                        style: TextStyle(
+                          color: Colors.yellow, 
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red), 
+                        onPressed: () {
+                          _deleteMatch(match['id']); 
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Esporte: ${match['tipoEsporte'] ?? 'Não especificado'}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'Duração: ${match['matchDuration']}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'Vencedor: ${match['winner']}',
+                    style: TextStyle(
+                      color: Colors.yellow, 
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Jogadores do ${match['team1Name']}: ${match['team1Players']}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'Jogadores do ${match['team2Name']}: ${match['team2Players']}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    }
+  }
 }

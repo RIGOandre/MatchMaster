@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart'; 
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart'; 
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -14,7 +15,19 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    databaseFactory = databaseFactoryFfi; // <--- Add this line
+
+    if (kIsWeb) {
+      throw UnsupportedError("A web não é suportada pelo sqflite");
+    } else if (defaultTargetPlatform == TargetPlatform.windows || defaultTargetPlatform == TargetPlatform.linux || defaultTargetPlatform == TargetPlatform.macOS) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+    Future<bool> partidaExiste(String nomePartida) async {
+      final db = await database;
+      var res = await db.query('matches', where: 'nomePartida = ?', whereArgs: [nomePartida]);
+      return res.isNotEmpty;
+    }
+
 
     _database = await _initDatabase();
     return _database!;
@@ -29,30 +42,32 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute(
-      'CREATE TABLE teams(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)',
-    );
+Future<void> _onCreate(Database db, int version) async {
+  await db.execute(
+    'CREATE TABLE teams(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)',
+  );
 
-    await db.execute(
-      'CREATE TABLE players(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, teamId INTEGER, FOREIGN KEY(teamId) REFERENCES teams(id))',
-    );
+  await db.execute(
+    'CREATE TABLE players(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, teamId INTEGER, FOREIGN KEY(teamId) REFERENCES teams(id))',
+  );
 
-    await db.execute(
-      '''CREATE TABLE matches(
-          id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          team1Name TEXT, 
-          team2Name TEXT, 
-          team1Score INTEGER, 
-          team2Score INTEGER, 
-          matchDuration TEXT,
-          nomePartida TEXT,
-          team1Players TEXT,
-          team2Players TEXT,
-          winner TEXT
-      )''',
-    );
-  }
+
+  await db.execute(
+    '''CREATE TABLE matches(
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        team1Name TEXT, 
+        team2Name TEXT, 
+        team1Score INTEGER, 
+        team2Score INTEGER, 
+        matchDuration TEXT,
+        nomePartida TEXT,
+        team1Players TEXT,
+        team2Players TEXT,
+        winner TEXT,
+    )''',
+  );
+}
+
 
   Future<int> insertMatch(
     String team1Name,
@@ -82,7 +97,10 @@ class DatabaseHelper {
     );
   }
 
-  // Adicione outras funções do DatabaseHelper, se necessário
+  Future<List<Map<String, dynamic>>> getMatches() async {
+    final db = await database;
+    return await db.query('matches');
+  }
 
   Future<void> close() async {
     final db = await database;

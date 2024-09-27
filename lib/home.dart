@@ -123,21 +123,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 60),
-                Center(child: ImageSlider(onIconChange: _updatePlayerOptions)),
+                Center(
+                    child: ImageSlider(onIconChange: _updatePlayerOptions)),
                 SizedBox(height: 16.0),
                 const TextField(
                   decoration: InputDecoration(
                     hintText: 'Nome da partida',
                     hintStyle: TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
                     ),
                   ),
-                                        style: TextStyle(color: Colors.white), 
+                  style: TextStyle(color: Colors.white),
                 ),
                 SizedBox(height: 20.0),
                 const Text(
-                  'Número de jogadores:',
+                  'Jogadores em cada time:',
                   style: TextStyle(color: Colors.yellow, fontSize: 16.0),
                 ),
                 SizedBox(height: 10.0),
@@ -160,19 +162,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: _team1Controller,
                         decoration: const InputDecoration(
                           hintText: 'Time 1',
-                          hintStyle: TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
+                          hintStyle:
+                              TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 229, 255, 0)),
                           ),
                         ),
                         onChanged: (value) {
-                          setState(() {
-
-                          });
+                          setState(() {});
                         },
-                        style: TextStyle(color: Colors.white), 
+                        style: TextStyle(color: Colors.white),
                       ),
-                      
                     ),
                     SizedBox(width: 20.0),
                     Expanded(
@@ -181,22 +182,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: _team2Controller,
                         decoration: const InputDecoration(
                           hintText: 'Time 2',
-                          hintStyle: TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
+                          hintStyle:
+                              TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 229, 255, 0)),
                           ),
                         ),
-                        
                         onChanged: (value) {
-                          setState(() {
-                          });
+                          setState(() {});
                         },
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 20.0),
-                
                 SizedBox(height: 10.0),
                 GridView.builder(
                   shrinkWrap: true,
@@ -216,59 +216,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? _team1PlayersControllers[playerIndex]
                           : _team2PlayersControllers[playerIndex],
                       decoration: InputDecoration(
-                        hintText: 'Jogador ${playerIndex + 1} - Time $teamIndex',
-                        hintStyle: const TextStyle(color: Color.fromARGB(255, 229, 255, 0)),
+                        hintText:
+                            'Jogador ${playerIndex + 1} - Time $teamIndex',
+                        hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 229, 255, 0)),
                         focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(255, 229, 255, 0)),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 229, 255, 0)),
                         ),
                       ),
                       onChanged: (value) {
-                        setState(() {
-
-                        });
+                        setState(() {});
                       },
                     );
                   },
                 ),
                 SizedBox(height: 20.0),
                 Center(
-                  child:
-ElevatedButton(
-  onPressed: () async {
-    try {
-      final databaseHelper = DatabaseHelper();
-      await databaseHelper.insertMatch(
-        _team1Controller.text, 
-        _team2Controller.text, 
-        0, 
-        0, 
-        '00:00', 
-        'Jogador1, Jogador2', 
-        'Jogador3, Jogador4', 
-        'Empate', 
-        nomePartida: 'Partida 1', 
-      );
-      print('Deu Boa');
-    } catch (e) {
-      print('Deu bosta: $e');
-    }
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => PartidaEmAndamento(
-          team1Name: _team1Controller.text,
-          team2Name: _team2Controller.text,
-          team1Players: _team1PlayersControllers.map((controller) => controller.text).toList(),
-          team2Players: _team2PlayersControllers.map((controller) => controller.text).toList(),
-        ),
-      ),
-      (Route<dynamic> route) => false,
-    );
-  },
-  child: const Text(
-    'Salvar',
-    style: TextStyle(color: Colors.black),
-  ),
-)
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PartidaEmAndamento(
+                              team1Name: _team1Controller.text,
+                              team2Name: _team2Controller.text,
+                              team1Players: _team1PlayersControllers
+                                  .map((controller) => controller.text)
+                                  .toList(),
+                              team2Players: _team2PlayersControllers
+                                  .map((controller) => controller.text)
+                                  .toList(),
+                            ),
+                          ),
+                        );
+                      } catch (e) {
+                        print('Erro ao salvar a partida: $e');
+                      }
+                    },
+                    child: const Text(
+                      'Salvar',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -284,35 +275,33 @@ class ImageSlider extends StatelessWidget {
 
   ImageSlider({required this.onIconChange});
 
-  final List<IconData> _icons = [
-    Icons.sports_tennis_rounded,
-    Icons.circle,
-    Icons.sports_volleyball_rounded,
+  final List<String> _imagePaths = [
+    'assets/tenis.png',
+    'assets/tenis_mesa.png',
+    'assets/volei.jpg'
   ];
 
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
-      options: CarouselOptions(
-        height: 120.0,
-        enlargeCenterPage: true,
-        onPageChanged: (index, reason) {
-          if (index >= 0 && index < _icons.length) {
-            onIconChange(index);
-          }
-        },
-      ),
-      items: _icons.map((iconData) {
+      items: _imagePaths.map((path) {
         return Builder(
           builder: (BuildContext context) {
-            return CircleAvatar(
-              radius: 60,
-              backgroundColor: Color.fromARGB(255, 251, 255, 0),
-              child: Icon(iconData, size: 60, color: Colors.black),
+            return Image.asset(
+              path,
+              fit: BoxFit.contain,
+              height: 200,
+              width: 200,
             );
           },
         );
       }).toList(),
+      options: CarouselOptions(
+        height: 200.0,
+        onPageChanged: (index, reason) {
+          onIconChange(index);
+        },
+      ),
     );
   }
 }
@@ -321,41 +310,30 @@ class PlayerNumberSelection extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onPlayersSelected;
 
-  PlayerNumberSelection({required this.selectedIndex, required this.onPlayersSelected});
+  const PlayerNumberSelection({
+    required this.selectedIndex,
+    required this.onPlayersSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    List<int> playerNumbers;
-    if (selectedIndex == 2) {
-      playerNumbers = [2, 6];
+    List<int> options;
+    if (selectedIndex == 0) {
+      options = [2, 4];
+    } else if (selectedIndex == 1) {
+      options = [1, 2];
     } else {
-      playerNumbers = [2, 4];
+      options = [2, 4, 6];
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: playerNumbers.map((number) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: ElevatedButton(
-            onPressed: () {
-              onPlayersSelected(number);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            ),
-            child: Text(
-              '$number',
-              style: TextStyle(fontSize: 16.0, color: Colors.black),
-            ),
-          ),
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: options.map((players) {
+        return ElevatedButton(
+          onPressed: () => onPlayersSelected(players),
+          child: Text('$players Jogadores'),
         );
       }).toList(),
     );
   }
-}
-
+} 

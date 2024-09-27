@@ -27,12 +27,13 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
 dependencies:
-  sqflite: ^2.3.3+1 
-  path:
-  sqflite_common_ffi: ^2.1.0
   flutter:
     sdk: flutter
+  sqflite: ^2.0.0+4 
+  sqflite_common_ffi: ^2.0.0+4
+  path:
   carousel_slider: ^4.2.1
 
   # The following adds the Cupertino Icons font to your application.
@@ -42,8 +43,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -60,9 +59,11 @@ flutter:
 
   assets:
   - assets/1.png
-  - assets/minilogo.png
-  - assets/4.png
-  - assets/6.png
+  - assets/volei.jpg
+  - assets/tenis.png
+  - assets\tenis_mesa.png
+  
+
 
 
   # The following line ensures that the Material Icons font is
