@@ -1,7 +1,7 @@
 <h1 align="center">🏆 MatchMaster 🏆</h1>
 
 <p align="center">
-  <strong>Gerencie suas partidas de Tênis, Tênis de Mesa e Vôlei com facilidade! 📱🎾🏓🏐</strong>
+  <strong>Gerencie suas partidas de Tênis, Tênis de Mesa e Vôlei com facilidade e praticidade! 🎾🏓🏐</strong>
 </p>
 
 <p align="center">
