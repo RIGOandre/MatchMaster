@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "matchmaster" "\0"
+            VALUE "CompanyName", "rigoandre" "\0"
+            VALUE "FileDescription", "MatchMaster" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "matchmaster" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 rigoandre. All rights reserved." "\0"
             VALUE "OriginalFilename", "matchmaster.exe" "\0"
-            VALUE "ProductName", "matchmaster" "\0"
+            VALUE "ProductName", "MatchMaster" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

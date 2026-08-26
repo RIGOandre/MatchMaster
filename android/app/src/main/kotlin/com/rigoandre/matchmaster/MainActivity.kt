@@ -1,4 +1,4 @@
-package com.example.matchmaster
+package com.rigoandre.matchmaster
 
 import io.flutter.embedding.android.FlutterActivity
 
