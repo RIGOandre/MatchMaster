@@ -145,6 +145,9 @@ class MatchDetailScreen extends StatelessWidget {
                         : Icons.emoji_events_outlined,
                     label: match.isDraw ? 'Resultado' : 'Vencedor',
                     value: match.winnerName,
+                    accent: match.isDraw
+                        ? null
+                        : AppColors.highlight(theme.brightness),
                   ),
                 ),
               ],
@@ -161,6 +164,8 @@ class MatchDetailScreen extends StatelessWidget {
                         set: match.sets[i],
                         setNoun: setNoun,
                         isLast: i == match.sets.length - 1,
+                        team1Color: AppColors.team1(theme.brightness),
+                        team2Color: AppColors.team2(theme.brightness),
                       ),
                   ],
                 ),
@@ -238,12 +243,16 @@ class _SetRow extends StatelessWidget {
     required this.set,
     required this.setNoun,
     required this.isLast,
+    required this.team1Color,
+    required this.team2Color,
   });
 
   final int index;
   final SetScore set;
   final String setNoun;
   final bool isLast;
+  final Color team1Color;
+  final Color team2Color;
 
   @override
   Widget build(BuildContext context) {
@@ -268,9 +277,7 @@ class _SetRow extends StatelessWidget {
                   fontWeight: set.winner == TeamSide.team1
                       ? FontWeight.w900
                       : FontWeight.w400,
-                  color: set.winner == TeamSide.team1
-                      ? theme.colorScheme.primary
-                      : null,
+                  color: set.winner == TeamSide.team1 ? team1Color : null,
                 ),
               ),
               const Padding(
@@ -283,9 +290,7 @@ class _SetRow extends StatelessWidget {
                   fontWeight: set.winner == TeamSide.team2
                       ? FontWeight.w900
                       : FontWeight.w400,
-                  color: set.winner == TeamSide.team2
-                      ? theme.colorScheme.primary
-                      : null,
+                  color: set.winner == TeamSide.team2 ? team2Color : null,
                 ),
               ),
             ],

@@ -187,6 +187,22 @@ void main() {
     });
   });
 
+  testWidgets('detalhes da partida', (WidgetTester tester) async {
+    await shoot(tester, 'detail', ThemeMode.dark, (WidgetTester t) async {
+      await t.tap(find.text('Histórico'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('Fominhas vs Saibro FC'));
+      await t.pumpAndSettle();
+    });
+  });
+
+  testWidgets('perfil', (WidgetTester tester) async {
+    await shoot(tester, 'profile', ThemeMode.dark, (WidgetTester t) async {
+      await t.tap(find.text('Perfil'));
+      await t.pumpAndSettle();
+    });
+  });
+
   testWidgets('login', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
     SharedPreferences.resetStatic();
