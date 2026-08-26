@@ -4,7 +4,12 @@ import 'package:matchmaster/scoring/score_state.dart';
 import 'package:matchmaster/scoring/scoring_engine.dart';
 
 /// Marca [times] pontos seguidos para [side].
-ScoreState score(ScoringEngine engine, ScoreState state, TeamSide side, int times) {
+ScoreState score(
+  ScoringEngine engine,
+  ScoreState state,
+  TeamSide side,
+  int times,
+) {
   ScoreState current = state;
   for (int i = 0; i < times; i++) {
     current = engine.addPoint(current, side);
@@ -44,12 +49,14 @@ void main() {
     });
 
     test('quinto set (tie-break) é disputado em 15 pontos', () {
-      ScoreState state = const ScoreState(completedSets: <SetScore>[
-        SetScore(25, 20),
-        SetScore(20, 25),
-        SetScore(25, 20),
-        SetScore(20, 25),
-      ]);
+      ScoreState state = const ScoreState(
+        completedSets: <SetScore>[
+          SetScore(25, 20),
+          SetScore(20, 25),
+          SetScore(25, 20),
+          SetScore(20, 25),
+        ],
+      );
       expect(state.setsWon1, 2);
       expect(state.setsWon2, 2);
 
@@ -60,10 +67,12 @@ void main() {
     });
 
     test('partida termina ao vencer três sets e ignora pontos posteriores', () {
-      ScoreState state = const ScoreState(completedSets: <SetScore>[
-        SetScore(25, 10),
-        SetScore(25, 10),
-      ]);
+      ScoreState state = const ScoreState(
+        completedSets: <SetScore>[
+          SetScore(25, 10),
+          SetScore(25, 10),
+        ],
+      );
       state = score(engine, state, TeamSide.team1, 25);
 
       expect(state.winner, TeamSide.team1);
@@ -77,7 +86,8 @@ void main() {
         ScoringEngine.of(Sport.tableTennis, ScoringMode.official);
 
     test('game fecha em 11 pontos', () {
-      ScoreState state = score(engine, const ScoreState(), TeamSide.team2, 11);
+      final ScoreState state =
+          score(engine, const ScoreState(), TeamSide.team2, 11);
       expect(state.completedSets, <SetScore>[const SetScore(0, 11)]);
     });
 
@@ -202,7 +212,8 @@ void main() {
       for (int i = 0; i < 5; i++) {
         state = score(engine, state, TeamSide.team1, 4);
       }
-      state = score(engine, state, TeamSide.team1, 3); // 40-0, sacando para o jogo
+      state =
+          score(engine, state, TeamSide.team1, 3); // 40-0, sacando para o jogo
       expect(engine.isMatchPoint(state, TeamSide.team1), isTrue);
       expect(engine.isMatchPoint(state, TeamSide.team2), isFalse);
       expect(engine.statusMessage(state), 'Match point');
@@ -214,7 +225,8 @@ void main() {
         ScoringEngine.of(Sport.volleyball, ScoringMode.free);
 
     test('conta pontos sem nunca fechar sozinho', () {
-      ScoreState state = score(engine, const ScoreState(), TeamSide.team1, 40);
+      final ScoreState state =
+          score(engine, const ScoreState(), TeamSide.team1, 40);
       expect(state.points1, 40);
       expect(state.isFinished, isFalse);
       expect(state.completedSets, isEmpty);

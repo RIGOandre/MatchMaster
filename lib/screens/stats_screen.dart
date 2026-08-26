@@ -261,9 +261,8 @@ class _StandingRow extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 13,
-                color: position == 1
-                    ? Colors.black
-                    : theme.colorScheme.onSurface,
+                color:
+                    position == 1 ? Colors.black : theme.colorScheme.onSurface,
               ),
             ),
           ),

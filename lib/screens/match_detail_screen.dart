@@ -74,8 +74,11 @@ class MatchDetailScreen extends StatelessWidget {
             Center(
               child: Column(
                 children: <Widget>[
-                  Icon(match.sport.icon,
-                      size: 40, color: theme.colorScheme.primary),
+                  Icon(
+                    match.sport.icon,
+                    size: 40,
+                    color: theme.colorScheme.primary,
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     match.title,

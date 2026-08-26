@@ -50,8 +50,7 @@ class MatchRepository {
       whereArgs: sport == null ? null : <Object?>[sport.id],
       orderBy: sort.orderBy,
     );
-    final List<MatchRecord> records =
-        rows.map((Map<String, Object?> row) => MatchRecord.fromMap(row)).toList();
+    final List<MatchRecord> records = rows.map(MatchRecord.fromMap).toList();
     if (query.trim().isEmpty) return records;
     return records
         .where((MatchRecord record) => record.matchesQuery(query))
@@ -148,16 +147,15 @@ class MatchStats {
       _record(builders, match.team2Name, match, isTeam1: false);
     }
 
-    final List<TeamStanding> standings = builders.values
-        .map((_StandingBuilder b) => b.build())
-        .toList()
-      ..sort((TeamStanding a, TeamStanding b) {
-        final int byWins = b.wins.compareTo(a.wins);
-        if (byWins != 0) return byWins;
-        final int byRate = b.winRate.compareTo(a.winRate);
-        if (byRate != 0) return byRate;
-        return b.pointDifference.compareTo(a.pointDifference);
-      });
+    final List<TeamStanding> standings =
+        builders.values.map((_StandingBuilder b) => b.build()).toList()
+          ..sort((TeamStanding a, TeamStanding b) {
+            final int byWins = b.wins.compareTo(a.wins);
+            if (byWins != 0) return byWins;
+            final int byRate = b.winRate.compareTo(a.winRate);
+            if (byRate != 0) return byRate;
+            return b.pointDifference.compareTo(a.pointDifference);
+          });
 
     return MatchStats(
       totalMatches: matches.length,

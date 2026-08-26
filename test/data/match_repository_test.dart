@@ -76,10 +76,16 @@ void main() {
     });
 
     test('devolve o registro com id e preserva todos os campos', () async {
-      final MatchRecord saved = await repository.insert(buildMatch(
-        name: 'Final',
-        sets: const <SetScore>[SetScore(25, 20), SetScore(23, 25), SetScore(15, 9)],
-      ));
+      final MatchRecord saved = await repository.insert(
+        buildMatch(
+          name: 'Final',
+          sets: const <SetScore>[
+            SetScore(25, 20),
+            SetScore(23, 25),
+            SetScore(15, 9),
+          ],
+        ),
+      );
       expect(saved.id, isNotNull);
 
       final MatchRecord? loaded = await repository.findById(saved.id!);
@@ -98,29 +104,35 @@ void main() {
 
   group('findAll', () {
     setUp(() async {
-      await repository.insert(buildMatch(
-        sport: Sport.tennis,
-        team1: 'Ana',
-        team2: 'Bruno',
-        team1Players: const <String>['Ana'],
-        playedAt: DateTime(2024, 1, 1),
-        durationSeconds: 100,
-      ));
-      await repository.insert(buildMatch(
-        sport: Sport.volleyball,
-        team1: 'Praia',
-        team2: 'Quadra',
-        team1Players: const <String>['Carla'],
-        playedAt: DateTime(2024, 3, 1),
-        durationSeconds: 5000,
-      ));
-      await repository.insert(buildMatch(
-        sport: Sport.tableTennis,
-        team1: 'Mesa 1',
-        team2: 'Mesa 2',
-        playedAt: DateTime(2024, 2, 1),
-        durationSeconds: 900,
-      ));
+      await repository.insert(
+        buildMatch(
+          sport: Sport.tennis,
+          team1: 'Ana',
+          team2: 'Bruno',
+          team1Players: const <String>['Ana'],
+          playedAt: DateTime(2024, 1, 1),
+          durationSeconds: 100,
+        ),
+      );
+      await repository.insert(
+        buildMatch(
+          sport: Sport.volleyball,
+          team1: 'Praia',
+          team2: 'Quadra',
+          team1Players: const <String>['Carla'],
+          playedAt: DateTime(2024, 3, 1),
+          durationSeconds: 5000,
+        ),
+      );
+      await repository.insert(
+        buildMatch(
+          sport: Sport.tableTennis,
+          team1: 'Mesa 1',
+          team2: 'Mesa 2',
+          playedAt: DateTime(2024, 2, 1),
+          durationSeconds: 900,
+        ),
+      );
     });
 
     test('filtra por esporte', () async {
@@ -180,31 +192,37 @@ void main() {
 
   group('stats', () {
     test('agrega partidas, tempo e classificação dos times', () async {
-      await repository.insert(buildMatch(
-        team1: 'Alfa',
-        team2: 'Beta',
-        score1: 3,
-        score2: 1,
-        outcome: MatchOutcome.team1,
-        durationSeconds: 600,
-      ));
-      await repository.insert(buildMatch(
-        team1: 'Alfa',
-        team2: 'Gama',
-        score1: 3,
-        score2: 0,
-        outcome: MatchOutcome.team1,
-        durationSeconds: 400,
-      ));
-      await repository.insert(buildMatch(
-        team1: 'Beta',
-        team2: 'Gama',
-        score1: 1,
-        score2: 1,
-        outcome: MatchOutcome.draw,
-        durationSeconds: 200,
-        sport: Sport.tennis,
-      ));
+      await repository.insert(
+        buildMatch(
+          team1: 'Alfa',
+          team2: 'Beta',
+          score1: 3,
+          score2: 1,
+          outcome: MatchOutcome.team1,
+          durationSeconds: 600,
+        ),
+      );
+      await repository.insert(
+        buildMatch(
+          team1: 'Alfa',
+          team2: 'Gama',
+          score1: 3,
+          score2: 0,
+          outcome: MatchOutcome.team1,
+          durationSeconds: 400,
+        ),
+      );
+      await repository.insert(
+        buildMatch(
+          team1: 'Beta',
+          team2: 'Gama',
+          score1: 1,
+          score2: 1,
+          outcome: MatchOutcome.draw,
+          durationSeconds: 200,
+          sport: Sport.tennis,
+        ),
+      );
 
       final MatchStats stats = await repository.stats();
       expect(stats.totalMatches, 3);
@@ -242,10 +260,14 @@ void main() {
 
     test('estatísticas podem ser restritas a um esporte', () async {
       await repository.insert(buildMatch(sport: Sport.tennis, team1: 'Ana'));
-      await repository.insert(buildMatch(sport: Sport.volleyball, team1: 'Praia'));
+      await repository
+          .insert(buildMatch(sport: Sport.volleyball, team1: 'Praia'));
       final MatchStats stats = await repository.stats(sport: Sport.tennis);
       expect(stats.totalMatches, 1);
-      expect(stats.standings.any((TeamStanding s) => s.name == 'Praia'), isFalse);
+      expect(
+        stats.standings.any((TeamStanding s) => s.name == 'Praia'),
+        isFalse,
+      );
     });
   });
 }

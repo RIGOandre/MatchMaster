@@ -22,7 +22,8 @@ class SetScore {
     return null;
   }
 
-  Map<String, dynamic> toMap() => <String, dynamic>{'team1': team1, 'team2': team2};
+  Map<String, dynamic> toMap() =>
+      <String, dynamic>{'team1': team1, 'team2': team2};
 
   @override
   String toString() => '$team1-$team2';

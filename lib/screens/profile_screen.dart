@@ -38,7 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final SettingsStore settings = AppScope.of(context).settings;
     final String? name = await showDialog<String>(
       context: context,
-      builder: (BuildContext context) => _NameDialog(initialName: settings.userName),
+      builder: (BuildContext context) =>
+          _NameDialog(initialName: settings.userName),
     );
 
     if (name == null || !mounted) return;
@@ -99,7 +100,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                InitialsAvatar(initials: initialsOf(settings.userName), radius: 34),
+                InitialsAvatar(
+                  initials: initialsOf(settings.userName),
+                  radius: 34,
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -174,8 +178,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: <Widget>[
                   ListTile(
-                    leading: Icon(Icons.delete_sweep_outlined,
-                        color: theme.colorScheme.error),
+                    leading: Icon(
+                      Icons.delete_sweep_outlined,
+                      color: theme.colorScheme.error,
+                    ),
                     title: const Text('Apagar histórico'),
                     subtitle: const Text('Remove todas as partidas salvas'),
                     onTap: _clearHistory,

@@ -1,55 +1,120 @@
 <h1 align="center">🏆 MatchMaster 🏆</h1>
 
 <p align="center">
-  <strong>Gerencie suas partidas de Tênis, Tênis de Mesa e Vôlei com facilidade e praticidade! 🎾🏓🏐</strong>
+  <strong>Placar e histórico das suas partidas de Tênis, Tênis de Mesa e Vôlei. 🎾🏓🏐</strong>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-UI-blue" alt="Flutter UI Badge">
-  <img src="https://img.shields.io/badge/Dart-Backend-blue" alt="Dart Backend Badge">
-  <img src="https://img.shields.io/badge/Status-Active-green" alt="Active Development Badge">
+  <img src="https://img.shields.io/badge/Flutter-3.24-blue" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-3.5-blue" alt="Dart">
+  <img src="https://img.shields.io/badge/Testes-66-brightgreen" alt="Testes">
+  <img src="https://img.shields.io/badge/Licença-MIT-lightgrey" alt="Licença">
 </p>
-
-
-
-<h2 align="center">Do que se trata o MatchMaster</h2>
-
-<p align="center">
-  O <strong>MatchMaster</strong> é um aplicativo desenvolvido em <strong>Flutter</strong> para gerenciar partidas de esportes como <strong>Tênis</strong>, <strong>Tênis de Mesa</strong>, e <strong>Vôlei</strong>. Ele permite criar, acompanhar e salvar partidas, exibindo informações detalhadas sobre os times, jogadores, e resultados. O app oferece funcionalidades de cronometragem em tempo real durante as partidas e permite salvar o histórico de confrontos, que pode ser filtrado por esporte, garantindo fácil navegação para rever ou excluir resultados anteriores.
-</p>
-
-
-
-<h2 align="center">🎮 Funcionalidades Principais 🎮</h2>
-
-- **Criação de partidas**: Selecione o tipo de esporte, insira os times e os jogadores e inicie uma nova partida.
-- **Cronometragem em tempo real**: Acompanhe a duração da partida e o placar ao vivo.
-- **Armazenamento de partidas concluídas**: As partidas podem ser salvas e revisadas posteriormente.
-- **Filtro por esporte**: Visualize as partidas salvas de acordo com o esporte selecionado (Tênis, Tênis de Mesa, Vôlei).
-- **Gerenciamento de partidas**: Exclua partidas salvas quando necessário.
-- **Interface amigável**: Design limpo, com navegação fácil e intuitiva.
 
 ---
 
-<h2 align="center">App Description</h2>
+## O que é
 
-<p align="center">
-  <strong>MatchMaster</strong> is a <strong>Flutter-based</strong> app designed to manage sports matches like <strong>Tennis</strong>, <strong>Table Tennis</strong>, and <strong>Volleyball</strong>. It allows users to create, track, and save matches while displaying detailed information about teams, players, and results. The app offers real-time match timing and score tracking and saves match histories that can be filtered by sport, making it easy to review or delete past results.
-</p>
+O **MatchMaster** é um app Flutter para marcar ponto e guardar o resultado das
+partidas que você joga com os amigos. Você monta a partida (esporte, times,
+jogadores), marca os pontos durante o jogo e o resultado fica salvo no aparelho
+para consultar depois.
 
+Tudo é **local**: não há servidor, cadastro nem envio de dados para lugar
+nenhum. O histórico vive no SQLite do próprio aparelho.
 
+## Funcionalidades
 
-<h2 align="center">🌟 Key Features 🌟</h2>
+### Placar que entende o esporte
 
-- **Match creation**: Choose a sport type, enter team names and players, and start a new match.
-- **Real-time timer**: Track the duration of the match and live scores.
-- **Completed match storage**: Save matches and review them later.
-- **Sport-based filtering**: View saved matches filtered by selected sport (Tennis, Table Tennis, Volleyball).
-- **Match management**: Delete saved matches as needed.
-- **User-friendly interface**: Clean design with easy and intuitive navigation.
+Em **Regras oficiais**, o app conta os pontos como o esporte manda:
 
----
+| Esporte | Pontuação | Set / Game | Partida |
+| --- | --- | --- | --- |
+| Tênis | 15 / 30 / 40, deuce e vantagem | 6 games com 2 de diferença; tie-break de 7 pontos em 6-6 | melhor de 3 sets |
+| Tênis de Mesa | pontos corridos até 11, com 2 de diferença | — | melhor de 5 games |
+| Vôlei | pontos corridos até 25, com 2 de diferença | quinto set em 15 pontos | melhor de 5 sets |
 
-<p align="center">
-  🚀 <strong>Developed to simplify match tracking and management for friends or small sports events, providing a clear history of played games!</strong> 🚀
-</p>
+O app avisa quando o próximo ponto é **set point** ou **match point**, e encerra
+a partida sozinho quando ela acaba.
+
+Prefere só contar pontos, sem regra nenhuma? O modo **Contagem livre** mantém o
+comportamento simples: os pontos sobem, você encerra quando quiser.
+
+### Durante a partida
+
+- Toque em qualquer lugar do placar do time para marcar ponto.
+- **Desfazer** o último ponto quantas vezes precisar.
+- Cronômetro com **pausa e retomada**.
+- Placar set a set na tela.
+- Confirmação antes de descartar uma partida em andamento.
+
+### Depois da partida
+
+- **Histórico** com busca por time, jogador ou esporte, filtro por esporte e
+  ordenação por data ou duração.
+- **Detalhes** de cada partida com o placar de cada set e um resumo pronto para
+  copiar e colar em qualquer conversa.
+- Exclusão com confirmação e **desfazer**.
+- **Estatísticas**: total de partidas, tempo em quadra, duração média,
+  distribuição por esporte e classificação dos times por vitórias e
+  aproveitamento.
+- **Perfil** com nome editável e tema claro, escuro ou o do sistema.
+
+## Como rodar
+
+Requer o [Flutter](https://docs.flutter.dev/get-started/install) 3.24 ou
+superior.
+
+```bash
+flutter pub get
+flutter run
+```
+
+### Testes e análise
+
+```bash
+flutter analyze                                   # análise estática
+dart format --output=none --set-exit-if-changed lib test
+flutter test                                      # 66 testes
+```
+
+Os mesmos comandos rodam no CI a cada push (`.github/workflows/ci.yml`).
+
+## Estrutura do projeto
+
+```
+lib/
+  core/theme/       identidade visual (Material 3, preto e amarelo)
+  core/utils/       formatação de duração, data e iniciais
+  models/           Sport (regras de cada esporte) e MatchRecord
+  scoring/          motor de pontuação: estado imutável + regras por esporte
+  data/             banco SQLite, migrações, repositório e preferências
+  screens/          login, casca com abas, nova partida, placar,
+                    histórico, detalhes, estatísticas e perfil
+  widgets/          componentes reutilizados entre as telas
+test/
+  core/ models/ scoring/   testes unitários das regras
+  data/                    repositório e migração do banco antigo
+  screens/                 testes de widget dos fluxos principais
+```
+
+O motor de pontuação é **puro**: cada ponto devolve um novo estado imutável em
+vez de alterar o anterior. É o que torna o desfazer confiável e as regras
+testáveis sem subir nenhuma tela.
+
+## Plataformas
+
+Android, iOS, Windows, macOS e Linux. A versão **web não é suportada**: o
+armazenamento local usa `sqflite`, que não roda no navegador — o app exibe um
+erro claro em vez de falhar silenciosamente.
+
+## Atualizando de uma versão anterior
+
+Quem já tinha o app instalado não perde nada: na primeira abertura o banco é
+migrado automaticamente para o formato novo, convertendo a duração, os
+jogadores e o vencedor de cada partida já registrada.
+
+## Licença
+
+MIT — veja [LICENSE](LICENSE).

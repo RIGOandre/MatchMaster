@@ -40,7 +40,8 @@ class SettingsStore extends ChangeNotifier {
 
   Sport get defaultSport => Sport.fromId(_prefs.getString(_kDefaultSport));
 
-  ScoringMode get scoringMode => ScoringMode.fromId(_prefs.getString(_kScoringMode));
+  ScoringMode get scoringMode =>
+      ScoringMode.fromId(_prefs.getString(_kScoringMode));
 
   Future<void> setRememberMe(bool value, {String? userName}) async {
     await _prefs.setBool(_kRememberMe, value);

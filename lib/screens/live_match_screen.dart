@@ -331,7 +331,9 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                         )
                       : const Icon(Icons.save_outlined),
                   label: Text(
-                    _score.isFinished ? 'Salvar resultado' : 'Encerrar e salvar',
+                    _score.isFinished
+                        ? 'Salvar resultado'
+                        : 'Encerrar e salvar',
                   ),
                 ),
               ),

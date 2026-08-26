@@ -100,7 +100,8 @@ void main() {
   });
 
   group('login', () {
-    testWidgets('não avança com os campos em branco', (WidgetTester tester) async {
+    testWidgets('não avança com os campos em branco',
+        (WidgetTester tester) async {
       await pumpApp(tester, repository);
 
       await tester.tap(find.widgetWithText(ElevatedButton, 'Entrar'));
@@ -155,8 +156,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Informe o nome do time.'), findsNWidgets(2));
-      expect(find.text('Confira os campos destacados para começar.'),
-          findsOneWidget);
+      expect(
+        find.text('Confira os campos destacados para começar.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('as opções de jogadores acompanham o esporte escolhido',
@@ -219,7 +222,8 @@ void main() {
       expect(find.text('Histórico'), findsWidgets);
     });
 
-    testWidgets('desfazer devolve o ponto anterior', (WidgetTester tester) async {
+    testWidgets('desfazer devolve o ponto anterior',
+        (WidgetTester tester) async {
       await signIn(tester);
 
       await tester.enterText(
@@ -266,7 +270,8 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('mostra estado vazio sem partidas', (WidgetTester tester) async {
+    testWidgets('mostra estado vazio sem partidas',
+        (WidgetTester tester) async {
       await openHistory(tester);
       expect(find.text('Seu histórico está vazio'), findsOneWidget);
     });

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:matchmaster/main.dart';
 import 'package:matchmaster/models/sport.dart';
+import 'package:matchmaster/scoring/scoring_engine.dart';
 import 'package:matchmaster/screens/home_shell.dart';
 import 'package:matchmaster/screens/live_match_screen.dart';
-import 'package:matchmaster/scoring/scoring_engine.dart';
 import 'package:matchmaster/widgets/app_widgets.dart';
 
 /// Configuração de uma nova partida.
@@ -20,10 +20,10 @@ class _NewMatchScreenState extends State<NewMatchScreen> {
   final TextEditingController _team1Controller = TextEditingController();
   final TextEditingController _team2Controller = TextEditingController();
 
-  late final List<TextEditingController> _team1Players = List
-      .generate(Sport.maxTeamSize, (_) => TextEditingController());
-  late final List<TextEditingController> _team2Players = List
-      .generate(Sport.maxTeamSize, (_) => TextEditingController());
+  late final List<TextEditingController> _team1Players =
+      List.generate(Sport.maxTeamSize, (_) => TextEditingController());
+  late final List<TextEditingController> _team2Players =
+      List.generate(Sport.maxTeamSize, (_) => TextEditingController());
 
   Sport _sport = Sport.tennis;
   ScoringMode _mode = ScoringMode.official;

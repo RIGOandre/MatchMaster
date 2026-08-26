@@ -42,15 +42,20 @@ class DatabaseHelper {
 
   Future<Database> get database {
     final Database? existing = _database;
-    if (existing != null && existing.isOpen) return Future<Database>.value(existing);
-    return _opening ??= _open().then((Database db) {
-      _database = db;
-      _opening = null;
-      return db;
-    }, onError: (Object error, StackTrace stackTrace) {
-      _opening = null;
-      throw Error.throwWithStackTrace(error, stackTrace);
-    });
+    if (existing != null && existing.isOpen) {
+      return Future<Database>.value(existing);
+    }
+    return _opening ??= _open().then(
+      (Database db) {
+        _database = db;
+        _opening = null;
+        return db;
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        _opening = null;
+        throw Error.throwWithStackTrace(error, stackTrace);
+      },
+    );
   }
 
   Future<Database> _open() async {
@@ -168,14 +173,14 @@ class DatabaseHelper {
   /// Exposto para que a migração possa ser testada sem abrir um banco real.
   @visibleForTesting
   static MatchRecord migrateLegacyRow(Map<String, dynamic> row) {
-    final String team1Name = (row['team1Name'] as String?)?.trim().isNotEmpty ==
-            true
-        ? (row['team1Name'] as String).trim()
-        : 'Time 1';
-    final String team2Name = (row['team2Name'] as String?)?.trim().isNotEmpty ==
-            true
-        ? (row['team2Name'] as String).trim()
-        : 'Time 2';
+    final String team1Name =
+        (row['team1Name'] as String?)?.trim().isNotEmpty == true
+            ? (row['team1Name'] as String).trim()
+            : 'Time 1';
+    final String team2Name =
+        (row['team2Name'] as String?)?.trim().isNotEmpty == true
+            ? (row['team2Name'] as String).trim()
+            : 'Time 2';
 
     final int team1Score = (row['team1Score'] as num?)?.toInt() ?? 0;
     final int team2Score = (row['team2Score'] as num?)?.toInt() ?? 0;
@@ -196,8 +201,9 @@ class DatabaseHelper {
 
     // "Nome da Partida" era o texto fixo gravado por todas as partidas antigas.
     final String legacyName = (row['nomePartida'] as String?)?.trim() ?? '';
-    final String name =
-        (legacyName.isEmpty || legacyName == 'Nome da Partida') ? '' : legacyName;
+    final String name = (legacyName.isEmpty || legacyName == 'Nome da Partida')
+        ? ''
+        : legacyName;
 
     return MatchRecord(
       name: name,

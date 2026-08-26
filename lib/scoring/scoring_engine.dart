@@ -87,10 +87,12 @@ abstract class ScoringEngine {
   /// Texto curto de contexto ("Deuce", "Match point", "Tie-break").
   String? statusMessage(ScoreState state) {
     if (state.isFinished) return null;
-    if (isMatchPoint(state, TeamSide.team1) || isMatchPoint(state, TeamSide.team2)) {
+    if (isMatchPoint(state, TeamSide.team1) ||
+        isMatchPoint(state, TeamSide.team2)) {
       return 'Match point';
     }
-    if (isSetPoint(state, TeamSide.team1) || isSetPoint(state, TeamSide.team2)) {
+    if (isSetPoint(state, TeamSide.team1) ||
+        isSetPoint(state, TeamSide.team2)) {
       return '${rules.setNoun} point';
     }
     return null;
@@ -99,8 +101,10 @@ abstract class ScoringEngine {
   /// Aplica o resultado de um set encerrado e decide se a partida acabou.
   ScoreState _registerSet(ScoreState state, SetScore set) {
     final List<SetScore> sets = <SetScore>[...state.completedSets, set];
-    final int won1 = sets.where((SetScore s) => s.winner == TeamSide.team1).length;
-    final int won2 = sets.where((SetScore s) => s.winner == TeamSide.team2).length;
+    final int won1 =
+        sets.where((SetScore s) => s.winner == TeamSide.team1).length;
+    final int won2 =
+        sets.where((SetScore s) => s.winner == TeamSide.team2).length;
     TeamSide? winner;
     if (won1 >= rules.setsToWin) winner = TeamSide.team1;
     if (won2 >= rules.setsToWin) winner = TeamSide.team2;
@@ -161,7 +165,9 @@ class TennisScoringEngine extends ScoringEngine {
     if (state.tieBreak && state.points1 == 0 && state.points2 == 0) {
       return 'Tie-break';
     }
-    if (!state.tieBreak && state.points1 >= 3 && state.points1 == state.points2) {
+    if (!state.tieBreak &&
+        state.points1 >= 3 &&
+        state.points1 == state.points2) {
       return 'Deuce';
     }
     return super.statusMessage(state);
@@ -177,7 +183,8 @@ class TennisScoringEngine extends ScoringEngine {
     final int conceded = side == TeamSide.team1 ? p2 : p1;
 
     if (state.tieBreak) {
-      if (scored >= rules.tieBreakPoints && scored - conceded >= rules.minLead) {
+      if (scored >= rules.tieBreakPoints &&
+          scored - conceded >= rules.minLead) {
         // Quem vence o tie-break fecha o set em 7-6.
         return _registerSet(
           state,

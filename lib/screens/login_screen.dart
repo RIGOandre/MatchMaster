@@ -89,8 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               'neste aparelho.',
                               textAlign: TextAlign.center,
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color:
-                                    theme.colorScheme.onSurface.withOpacity(0.7),
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.7),
                               ),
                             ),
                             const SizedBox(height: 32),
@@ -123,9 +123,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   tooltip: _obscurePassword
                                       ? 'Mostrar senha'
                                       : 'Ocultar senha',
-                                  icon: Icon(_obscurePassword
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined),
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                  ),
                                   onPressed: () => setState(
                                     () => _obscurePassword = !_obscurePassword,
                                   ),
@@ -147,8 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               subtitle: const Text(
                                 'Entrar direto na próxima vez',
                               ),
-                              controlAffinity:
-                                  ListTileControlAffinity.leading,
+                              controlAffinity: ListTileControlAffinity.leading,
                               contentPadding: EdgeInsets.zero,
                               dense: true,
                             ),

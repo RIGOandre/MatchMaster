@@ -202,7 +202,10 @@ class HistoryScreenState extends State<HistoryScreen> {
         icon: Icons.error_outline,
         title: 'Não foi possível carregar o histórico',
         message: _error,
-        action: OutlinedButton(onPressed: reload, child: const Text('Tentar de novo')),
+        action: OutlinedButton(
+          onPressed: reload,
+          child: const Text('Tentar de novo'),
+        ),
       );
     }
     if (_matches.isEmpty) {
@@ -291,8 +294,11 @@ class _MatchCard extends StatelessWidget {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(match.sport.icon,
-                      size: 18, color: theme.colorScheme.primary),
+                  Icon(
+                    match.sport.icon,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -403,7 +409,11 @@ class _MetaChip extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Icon(icon, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+        Icon(
+          icon,
+          size: 14,
+          color: theme.colorScheme.onSurface.withOpacity(0.6),
+        ),
         const SizedBox(width: 4),
         Text(
           text,
