@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ink da marca (AppColors.ink900). Fundo do ícone e da splash. -->
+    <color name="brand_ink">#0C1015</color>
+</resources>
