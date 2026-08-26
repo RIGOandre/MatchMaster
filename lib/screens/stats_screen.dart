@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:matchmaster/core/theme/app_theme.dart';
 import 'package:matchmaster/core/utils/formatters.dart';
 import 'package:matchmaster/data/match_repository.dart';
 import 'package:matchmaster/main.dart';
 import 'package:matchmaster/models/sport.dart';
 import 'package:matchmaster/widgets/app_widgets.dart';
+import 'package:matchmaster/widgets/sport_glyph.dart';
 
 /// Números do histórico: quanto se jogou e quem está ganhando.
 class StatsScreen extends StatefulWidget {
@@ -75,6 +77,7 @@ class StatsScreenState extends State<StatsScreen> {
                 padding: const EdgeInsets.only(right: 8),
                 child: FilterChip(
                   label: const Text('Todos'),
+                  showCheckmark: false,
                   selected: _sportFilter == null,
                   onSelected: (_) {
                     setState(() => _sportFilter = null);
@@ -87,7 +90,14 @@ class StatsScreenState extends State<StatsScreen> {
                   padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
                     label: Text(sport.label),
-                    avatar: Icon(sport.icon, size: 18),
+                    avatar: SportGlyph(
+                      sport: sport,
+                      size: 18,
+                      color: _sportFilter == sport
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : null,
+                    ),
+                    showCheckmark: false,
                     selected: _sportFilter == sport,
                     onSelected: (_) {
                       setState(() => _sportFilter = sport);
@@ -134,6 +144,7 @@ class StatsScreenState extends State<StatsScreen> {
                 icon: Icons.emoji_events_outlined,
                 label: 'Líder',
                 value: _stats.leader?.name ?? '—',
+                accent: AppColors.highlight(Theme.of(context).brightness),
               ),
             ),
           ],
@@ -203,7 +214,7 @@ class _SportBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: <Widget>[
-          Icon(sport.icon, size: 20, color: theme.colorScheme.primary),
+          SportGlyph(sport: sport, size: 22),
           const SizedBox(width: 12),
           SizedBox(
             width: 96,
@@ -215,6 +226,7 @@ class _SportBar extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: fraction,
                 minHeight: 10,
+                color: sportAccent(sport).of(theme.brightness),
                 backgroundColor: theme.colorScheme.onSurface.withOpacity(0.08),
               ),
             ),
@@ -254,15 +266,15 @@ class _StandingRow extends StatelessWidget {
           leading: CircleAvatar(
             radius: 16,
             backgroundColor: position == 1
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurface.withOpacity(0.1),
+                ? AppColors.highlight(theme.brightness)
+                : theme.colorScheme.onSurface.withOpacity(0.08),
             child: Text(
               '$position',
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 13,
                 color:
-                    position == 1 ? Colors.black : theme.colorScheme.onSurface,
+                    position == 1 ? AppColors.ink : theme.colorScheme.onSurface,
               ),
             ),
           ),
@@ -279,8 +291,9 @@ class _StandingRow extends StatelessWidget {
           trailing: Text(
             standing.winRateLabel,
             style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: theme.colorScheme.primary,
+              color: position == 1
+                  ? AppColors.highlight(theme.brightness)
+                  : theme.colorScheme.onSurface,
             ),
           ),
         ),

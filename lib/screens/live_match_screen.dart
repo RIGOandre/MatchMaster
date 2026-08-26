@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:matchmaster/core/theme/app_theme.dart';
 import 'package:matchmaster/core/utils/formatters.dart';
 import 'package:matchmaster/data/match_repository.dart';
 import 'package:matchmaster/main.dart';
@@ -249,73 +250,82 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 6),
-                  color: theme.colorScheme.primary.withOpacity(0.15),
+                  color:
+                      AppColors.highlight(theme.brightness).withOpacity(0.16),
                   child: Text(
                     status.toUpperCase(),
                     textAlign: TextAlign.center,
                     style: theme.textTheme.labelLarge?.copyWith(
-                      color: theme.colorScheme.primary,
+                      color: AppColors.highlight(theme.brightness),
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.5,
                     ),
                   ),
                 ),
               Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(height: 8),
-                      if (!isFree) _SetsBadge(score: _score, engine: _engine),
-                      const SizedBox(height: 8),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: _ScoreColumn(
-                              teamName: widget.team1Name,
-                              players: widget.team1Players,
-                              label: _engine.pointLabel(_score, TeamSide.team1),
-                              setsWon: _score.setsWon1,
-                              showSets: !isFree,
-                              highlight: _score.winner == TeamSide.team1,
-                              enabled: !_score.isFinished,
-                              allowDecrement: isFree,
-                              onAdd: () => _addPoint(TeamSide.team1),
-                              onRemove: () => _removePoint(TeamSide.team1),
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const SizedBox(height: 8),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                              child: _ScoreColumn(
+                                teamName: widget.team1Name,
+                                players: widget.team1Players,
+                                accent: AppColors.team1(theme.brightness),
+                                label:
+                                    _engine.pointLabel(_score, TeamSide.team1),
+                                setsWon: _score.setsWon1,
+                                showSets: !isFree,
+                                highlight: _score.winner == TeamSide.team1,
+                                enabled: !_score.isFinished,
+                                allowDecrement: isFree,
+                                onAdd: () => _addPoint(TeamSide.team1),
+                                onRemove: () => _removePoint(TeamSide.team1),
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _ScoreColumn(
-                              teamName: widget.team2Name,
-                              players: widget.team2Players,
-                              label: _engine.pointLabel(_score, TeamSide.team2),
-                              setsWon: _score.setsWon2,
-                              showSets: !isFree,
-                              highlight: _score.winner == TeamSide.team2,
-                              enabled: !_score.isFinished,
-                              allowDecrement: isFree,
-                              onAdd: () => _addPoint(TeamSide.team2),
-                              onRemove: () => _removePoint(TeamSide.team2),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: _ScoreColumn(
+                                teamName: widget.team2Name,
+                                players: widget.team2Players,
+                                accent: AppColors.team2(theme.brightness),
+                                label:
+                                    _engine.pointLabel(_score, TeamSide.team2),
+                                setsWon: _score.setsWon2,
+                                showSets: !isFree,
+                                highlight: _score.winner == TeamSide.team2,
+                                enabled: !_score.isFinished,
+                                allowDecrement: isFree,
+                                onAdd: () => _addPoint(TeamSide.team2),
+                                onRemove: () => _removePoint(TeamSide.team2),
+                              ),
                             ),
+                          ],
+                        ),
+                        if (_score.completedSets.isNotEmpty) ...<Widget>[
+                          const SizedBox(height: 24),
+                          _SetHistory(score: _score, engine: _engine),
+                        ],
+                        if (_score.isFinished) ...<Widget>[
+                          const SizedBox(height: 24),
+                          _WinnerBanner(
+                            winnerName: _score.winner == TeamSide.team1
+                                ? widget.team1Name
+                                : widget.team2Name,
+                            accent: _score.winner == TeamSide.team1
+                                ? AppColors.team1(theme.brightness)
+                                : AppColors.team2(theme.brightness),
                           ),
                         ],
-                      ),
-                      if (_score.completedSets.isNotEmpty) ...<Widget>[
                         const SizedBox(height: 24),
-                        _SetHistory(score: _score, engine: _engine),
                       ],
-                      if (_score.isFinished) ...<Widget>[
-                        const SizedBox(height: 24),
-                        _WinnerBanner(
-                          winnerName: _score.winner == TeamSide.team1
-                              ? widget.team1Name
-                              : widget.team2Name,
-                        ),
-                      ],
-                      const SizedBox(height: 24),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -389,30 +399,11 @@ class _TimerBar extends StatelessWidget {
   }
 }
 
-class _SetsBadge extends StatelessWidget {
-  const _SetsBadge({required this.score, required this.engine});
-
-  final ScoreState score;
-  final ScoringEngine engine;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Text(
-      '${engine.rules.setNoun}s  ${score.setsWon1} - ${score.setsWon2}'
-      '${score.tieBreak ? '  ·  tie-break' : ''}',
-      style: theme.textTheme.labelLarge?.copyWith(
-        color: theme.colorScheme.onSurface.withOpacity(0.7),
-        letterSpacing: 1,
-      ),
-    );
-  }
-}
-
 class _ScoreColumn extends StatelessWidget {
   const _ScoreColumn({
     required this.teamName,
     required this.players,
+    required this.accent,
     required this.label,
     required this.setsWon,
     required this.showSets,
@@ -425,6 +416,9 @@ class _ScoreColumn extends StatelessWidget {
 
   final String teamName;
   final List<String> players;
+
+  /// Cor do time. Cada lado tem a sua, para o placar ser lido de relance.
+  final Color accent;
   final String label;
   final int setsWon;
   final bool showSets;
@@ -446,7 +440,7 @@ class _ScoreColumn extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w800,
-            color: highlight ? theme.colorScheme.primary : null,
+            color: accent,
           ),
         ),
         if (players.isNotEmpty) ...<Widget>[
@@ -474,11 +468,10 @@ class _ScoreColumn extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 24),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppTheme.radius),
+                color: accent.withOpacity(highlight ? 0.16 : 0.07),
                 border: Border.all(
-                  color: highlight
-                      ? theme.colorScheme.primary
-                      : theme.dividerColor,
+                  color: highlight ? accent : accent.withOpacity(0.35),
                   width: highlight ? 2 : 1,
                 ),
               ),
@@ -488,18 +481,15 @@ class _ScoreColumn extends StatelessWidget {
                     child: Text(
                       label,
                       style: theme.textTheme.displayLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: theme.colorScheme.primary,
+                        color: accent,
                       ),
                     ),
                   ),
                   if (showSets) ...<Widget>[
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
-                      '$setsWon',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
-                      ),
+                      setsWon == 1 ? '1 set' : '$setsWon sets',
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ],
@@ -514,6 +504,10 @@ class _ScoreColumn extends StatelessWidget {
             IconButton.filled(
               tooltip: 'Ponto para $teamName',
               onPressed: enabled ? onAdd : null,
+              style: IconButton.styleFrom(
+                backgroundColor: accent,
+                foregroundColor: theme.colorScheme.onPrimary,
+              ),
               icon: const Icon(Icons.add),
             ),
             if (allowDecrement) ...<Widget>[
@@ -573,9 +567,10 @@ class _SetHistory extends StatelessWidget {
 }
 
 class _WinnerBanner extends StatelessWidget {
-  const _WinnerBanner({required this.winnerName});
+  const _WinnerBanner({required this.winnerName, required this.accent});
 
   final String winnerName;
+  final Color accent;
 
   @override
   Widget build(BuildContext context) {
@@ -584,21 +579,22 @@ class _WinnerBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.colorScheme.primary),
+        color: accent.withOpacity(0.14),
+        borderRadius: BorderRadius.circular(AppTheme.radius),
+        border: Border.all(color: accent),
       ),
       child: Column(
         children: <Widget>[
-          Icon(Icons.emoji_events, size: 40, color: theme.colorScheme.primary),
+          Icon(
+            Icons.emoji_events,
+            size: 40,
+            color: AppColors.highlight(theme.brightness),
+          ),
           const SizedBox(height: 8),
           Text(
             '$winnerName venceu!',
             textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: theme.colorScheme.primary,
-            ),
+            style: theme.textTheme.headlineSmall?.copyWith(color: accent),
           ),
         ],
       ),

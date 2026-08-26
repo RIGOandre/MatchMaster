@@ -6,6 +6,7 @@ import 'package:matchmaster/main.dart';
 import 'package:matchmaster/screens/home_shell.dart';
 import 'package:matchmaster/screens/login_screen.dart';
 import 'package:matchmaster/widgets/app_widgets.dart';
+import 'package:matchmaster/widgets/brand.dart';
 
 /// Perfil e preferências.
 ///
@@ -102,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 InitialsAvatar(
                   initials: initialsOf(settings.userName),
-                  radius: 34,
+                  radius: 32,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -197,9 +198,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 24),
+            const Center(
+              child: BrandLockup(markSize: 34, showTagline: false),
+            ),
+            const SizedBox(height: 8),
             Center(
               child: Text(
-                'MatchMaster · seus dados ficam só neste aparelho',
+                'Seus dados ficam só neste aparelho',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurface.withOpacity(0.5),

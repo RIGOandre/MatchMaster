@@ -162,15 +162,12 @@ class TennisScoringEngine extends ScoringEngine {
   @override
   String? statusMessage(ScoreState state) {
     if (state.isFinished) return null;
-    if (state.tieBreak && state.points1 == 0 && state.points2 == 0) {
-      return 'Tie-break';
-    }
-    if (!state.tieBreak &&
-        state.points1 >= 3 &&
-        state.points1 == state.points2) {
-      return 'Deuce';
-    }
-    return super.statusMessage(state);
+    // Set/match point vêm primeiro: são a informação mais urgente do placar.
+    final String? urgent = super.statusMessage(state);
+    if (urgent != null) return urgent;
+    if (state.tieBreak) return 'Tie-break';
+    if (state.points1 >= 3 && state.points1 == state.points2) return 'Deuce';
+    return null;
   }
 
   @override

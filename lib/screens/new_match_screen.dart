@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:matchmaster/core/theme/app_theme.dart';
 import 'package:matchmaster/main.dart';
 import 'package:matchmaster/models/sport.dart';
 import 'package:matchmaster/scoring/scoring_engine.dart';
 import 'package:matchmaster/screens/home_shell.dart';
 import 'package:matchmaster/screens/live_match_screen.dart';
 import 'package:matchmaster/widgets/app_widgets.dart';
+import 'package:matchmaster/widgets/sport_glyph.dart';
 
 /// Configuração de uma nova partida.
 class NewMatchScreen extends StatefulWidget {
@@ -201,6 +203,7 @@ class _NewMatchScreenState extends State<NewMatchScreen> {
                   for (final int size in _sport.teamSizeOptions)
                     ChoiceChip(
                       label: Text(size == 1 ? '1 jogador' : '$size jogadores'),
+                      showCheckmark: false,
                       selected: _teamSize == size,
                       onSelected: (_) => setState(() => _teamSize = size),
                     ),
@@ -292,46 +295,36 @@ class _SportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color border =
-        selected ? theme.colorScheme.primary : theme.dividerColor;
+    final Color accent = sportAccent(sport).of(theme.brightness);
     return Semantics(
       button: true,
       selected: selected,
       label: sport.label,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTheme.radius),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          duration: const Duration(milliseconds: 160),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: border, width: selected ? 2 : 1),
-            color: selected
-                ? theme.colorScheme.primary.withOpacity(0.12)
-                : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppTheme.radius),
+            border: Border.all(
+              color: selected ? accent : theme.dividerColor,
+              width: selected ? 2 : 1,
+            ),
+            color: selected ? accent.withOpacity(0.12) : Colors.transparent,
           ),
           child: Column(
             children: <Widget>[
-              Image.asset(
-                sport.asset,
-                height: 56,
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => Icon(
-                  sport.icon,
-                  size: 48,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              const SizedBox(height: 10),
+              SportGlyph(sport: sport, size: 52, color: accent),
+              const SizedBox(height: 12),
               Text(
                 sport.label,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  fontWeight: selected ? FontWeight.w800 : FontWeight.w500,
-                  color: selected
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurface,
+                  fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  color: selected ? accent : theme.colorScheme.onSurface,
                 ),
               ),
             ],

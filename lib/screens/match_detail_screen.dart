@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:matchmaster/core/theme/app_theme.dart';
 import 'package:matchmaster/core/utils/formatters.dart';
 import 'package:matchmaster/main.dart';
 import 'package:matchmaster/models/match_record.dart';
 import 'package:matchmaster/scoring/score_state.dart';
 import 'package:matchmaster/scoring/scoring_engine.dart';
 import 'package:matchmaster/widgets/app_widgets.dart';
+import 'package:matchmaster/widgets/sport_glyph.dart';
 
 /// Detalhes de uma partida salva, com o placar set a set.
 class MatchDetailScreen extends StatelessWidget {
@@ -74,12 +76,8 @@ class MatchDetailScreen extends StatelessWidget {
             Center(
               child: Column(
                 children: <Widget>[
-                  Icon(
-                    match.sport.icon,
-                    size: 40,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(height: 8),
+                  SportGlyph(sport: match.sport, size: 52),
+                  const SizedBox(height: 10),
                   Text(
                     match.title,
                     textAlign: TextAlign.center,
@@ -107,16 +105,14 @@ class MatchDetailScreen extends StatelessWidget {
                         name: match.team1Name,
                         players: match.team1Players,
                         won: match.outcome == MatchOutcome.team1,
+                        accent: AppColors.team1(theme.brightness),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
                         match.scoreLine,
-                        style: theme.textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.w900,
-                          color: theme.colorScheme.primary,
-                        ),
+                        style: theme.textTheme.displaySmall,
                       ),
                     ),
                     Expanded(
@@ -124,6 +120,7 @@ class MatchDetailScreen extends StatelessWidget {
                         name: match.team2Name,
                         players: match.team2Players,
                         won: match.outcome == MatchOutcome.team2,
+                        accent: AppColors.team2(theme.brightness),
                       ),
                     ),
                   ],
@@ -199,11 +196,13 @@ class _TeamBlock extends StatelessWidget {
     required this.name,
     required this.players,
     required this.won,
+    required this.accent,
   });
 
   final String name;
   final List<String> players;
   final bool won;
+  final Color accent;
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +214,7 @@ class _TeamBlock extends StatelessWidget {
           textAlign: TextAlign.center,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: won ? FontWeight.w900 : FontWeight.w500,
-            color: won ? theme.colorScheme.primary : null,
+            color: accent,
           ),
         ),
         if (players.isNotEmpty) ...<Widget>[

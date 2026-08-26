@@ -1,0 +1,8 @@
+# As capturas de docs/screenshots ficam em test/preview/*_preview.dart, fora do
+# padrão `*_test.dart`, porque comparação de pixels depende da máquina que
+# renderiza — no CI elas falhariam por diferenças de fonte. Para regerar:
+#
+#   flutter test test/preview --update-goldens
+#
+# Este arquivo existe para deixar o padrão de nomes explícito.
+filename: "*_test.dart"

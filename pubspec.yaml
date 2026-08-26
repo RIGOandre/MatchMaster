@@ -58,11 +58,9 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
-  assets:
-    - assets/1.png
-    - assets/volei.jpg
-    - assets/tenis.png
-    - assets/tenis_mesa.png
+  # A marca e as ilustrações dos esportes são desenhadas em vetor
+  # (lib/widgets/brand.dart e lib/widgets/sport_glyph.dart), então o app não
+  # carrega nenhum bitmap em tempo de execução.
 
 
   # The following line ensures that the Material Icons font is

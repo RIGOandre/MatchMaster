@@ -9,7 +9,6 @@ enum Sport {
   tennis(
     id: 'tennis',
     label: 'Tênis',
-    asset: 'assets/tenis.png',
     icon: Icons.sports_tennis,
     teamSizeOptions: <int>[1, 2],
     legacyLabels: <String>['Tênis', 'Tenis'],
@@ -18,7 +17,6 @@ enum Sport {
   tableTennis(
     id: 'table_tennis',
     label: 'Tênis de Mesa',
-    asset: 'assets/tenis_mesa.png',
     icon: Icons.sports_tennis_outlined,
     teamSizeOptions: <int>[1, 2],
     legacyLabels: <String>['Tênis de Mesa', 'Tenis de Mesa'],
@@ -27,7 +25,6 @@ enum Sport {
   volleyball(
     id: 'volleyball',
     label: 'Vôlei',
-    asset: 'assets/volei.jpg',
     icon: Icons.sports_volleyball,
     teamSizeOptions: <int>[2, 4, 6],
     legacyLabels: <String>['Vôlei', 'Volei'],
@@ -37,7 +34,6 @@ enum Sport {
   const Sport({
     required this.id,
     required this.label,
-    required this.asset,
     required this.icon,
     required this.teamSizeOptions,
     required this.legacyLabels,
@@ -46,7 +42,9 @@ enum Sport {
 
   final String id;
   final String label;
-  final String asset;
+
+  /// Ícone monocromático para listas e metadados. A ilustração colorida do
+  /// esporte é desenhada por `SportGlyph`.
   final IconData icon;
 
   /// Quantidades de jogadores por time aceitas para o esporte.

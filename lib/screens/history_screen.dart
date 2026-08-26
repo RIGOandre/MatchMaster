@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchmaster/core/theme/app_theme.dart';
 import 'package:matchmaster/core/utils/formatters.dart';
 import 'package:matchmaster/data/match_repository.dart';
 import 'package:matchmaster/main.dart';
@@ -6,6 +7,7 @@ import 'package:matchmaster/models/match_record.dart';
 import 'package:matchmaster/models/sport.dart';
 import 'package:matchmaster/screens/match_detail_screen.dart';
 import 'package:matchmaster/widgets/app_widgets.dart';
+import 'package:matchmaster/widgets/sport_glyph.dart';
 
 /// Histórico de partidas salvas, com busca, filtro e ordenação.
 class HistoryScreen extends StatefulWidget {
@@ -176,7 +178,7 @@ class HistoryScreenState extends State<HistoryScreen> {
                   for (final Sport sport in Sport.values)
                     _FilterChip(
                       label: sport.label,
-                      icon: sport.icon,
+                      sport: sport,
                       selected: _sportFilter == sport,
                       onSelected: () {
                         setState(() => _sportFilter = sport);
@@ -247,13 +249,13 @@ class _FilterChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onSelected,
-    this.icon,
+    this.sport,
   });
 
   final String label;
   final bool selected;
   final VoidCallback onSelected;
-  final IconData? icon;
+  final Sport? sport;
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +263,15 @@ class _FilterChip extends StatelessWidget {
       padding: const EdgeInsets.only(right: 8),
       child: FilterChip(
         label: Text(label),
-        avatar: icon == null ? null : Icon(icon, size: 18),
+        avatar: sport == null
+            ? null
+            : SportGlyph(
+                sport: sport!,
+                size: 18,
+                color:
+                    selected ? Theme.of(context).colorScheme.onPrimary : null,
+              ),
+        showCheckmark: false,
         selected: selected,
         onSelected: (_) => onSelected(),
       ),
@@ -294,12 +304,8 @@ class _MatchCard extends StatelessWidget {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(
-                    match.sport.icon,
-                    size: 18,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
+                  SportGlyph(sport: match.sport, size: 22),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       match.title,
@@ -327,9 +333,10 @@ class _MatchCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
+                        color: AppColors.team1(theme.brightness),
                         fontWeight: match.outcome == MatchOutcome.team1
                             ? FontWeight.w800
-                            : FontWeight.w400,
+                            : FontWeight.w500,
                       ),
                     ),
                   ),
@@ -337,10 +344,7 @@ class _MatchCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
                       match.scoreLine,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: theme.colorScheme.primary,
-                      ),
+                      style: theme.textTheme.titleLarge,
                     ),
                   ),
                   Expanded(
@@ -349,9 +353,10 @@ class _MatchCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
+                        color: AppColors.team2(theme.brightness),
                         fontWeight: match.outcome == MatchOutcome.team2
                             ? FontWeight.w800
-                            : FontWeight.w400,
+                            : FontWeight.w500,
                       ),
                     ),
                   ),
@@ -386,6 +391,9 @@ class _MatchCard extends StatelessWidget {
                         ? Icons.handshake_outlined
                         : Icons.emoji_events_outlined,
                     text: match.isDraw ? 'Empate' : match.winnerName,
+                    color: match.isDraw
+                        ? null
+                        : AppColors.highlight(theme.brightness),
                   ),
                 ],
               ),
@@ -398,10 +406,11 @@ class _MatchCard extends StatelessWidget {
 }
 
 class _MetaChip extends StatelessWidget {
-  const _MetaChip({required this.icon, required this.text});
+  const _MetaChip({required this.icon, required this.text, this.color});
 
   final IconData icon;
   final String text;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {

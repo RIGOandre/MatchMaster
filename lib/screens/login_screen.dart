@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:matchmaster/core/theme/app_theme.dart';
 import 'package:matchmaster/main.dart';
 import 'package:matchmaster/screens/home_shell.dart';
+import 'package:matchmaster/widgets/brand.dart';
 
 /// Tela de entrada.
 ///
@@ -73,24 +73,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            const _LoginHeader(),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 24),
+                            const Center(
+                              child: BrandLockup(
+                                markSize: 64,
+                                axis: Axis.vertical,
+                              ),
+                            ),
+                            const SizedBox(height: 36),
                             Text(
                               'Seja bem-vindo',
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.w800,
-                              ),
+                              style: theme.textTheme.headlineMedium,
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              'Seu placar e seu histórico ficam salvos '
-                              'neste aparelho.',
-                              textAlign: TextAlign.center,
+                              'Marque os pontos, guarde o resultado. '
+                              'Tudo fica salvo neste aparelho.',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.onSurface
-                                    .withOpacity(0.7),
+                                    .withOpacity(0.65),
                               ),
                             ),
                             const SizedBox(height: 32),
@@ -171,56 +172,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
-
-class _LoginHeader extends StatelessWidget {
-  const _LoginHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Positioned.fill(
-            child: ClipPath(
-              clipper: _HeaderClipper(),
-              child: Container(color: AppColors.brand),
-            ),
-          ),
-          Image.asset(
-            'assets/1.png',
-            height: 150,
-            fit: BoxFit.contain,
-            // Um asset ausente não deve derrubar a tela de entrada.
-            errorBuilder: (_, __, ___) => const Icon(
-              Icons.emoji_events,
-              size: 96,
-              color: AppColors.ink,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HeaderClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    return Path()
-      ..lineTo(0, size.height - 40)
-      ..quadraticBezierTo(
-        size.width / 2,
-        size.height + 20,
-        size.width,
-        size.height - 40,
-      )
-      ..lineTo(size.width, 0)
-      ..close();
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

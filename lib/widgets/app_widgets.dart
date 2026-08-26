@@ -62,15 +62,20 @@ class StatTile extends StatelessWidget {
     required this.label,
     required this.value,
     this.icon,
+    this.accent,
   });
 
   final String label;
   final String value;
   final IconData? icon;
 
+  /// Cor do número. Por padrão usa a primária do tema.
+  final Color? accent;
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final Color tint = accent ?? theme.colorScheme.primary;
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -79,7 +84,7 @@ class StatTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             if (icon != null) ...<Widget>[
-              Icon(icon, color: theme.colorScheme.primary, size: 22),
+              Icon(icon, color: tint, size: 22),
               const SizedBox(height: 10),
             ],
             FittedBox(
@@ -87,10 +92,7 @@ class StatTile extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 value,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: theme.colorScheme.primary,
-                ),
+                style: theme.textTheme.headlineSmall?.copyWith(color: tint),
               ),
             ),
             const SizedBox(height: 4),
