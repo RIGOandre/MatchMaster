@@ -25,6 +25,13 @@ class DatabaseHelper {
 
   Database? _database;
 
+  /// Abertura em andamento.
+  ///
+  /// As abas do app pedem dados ao mesmo tempo assim que a casca é montada; sem
+  /// guardar o future, cada chamada concorrente abriria o banco por conta
+  /// própria e as conexões travavam umas às outras durante a migração.
+  Future<Database>? _opening;
+
   /// Fábrica alternativa, usada pelos testes para rodar em memória.
   @visibleForTesting
   static DatabaseFactory? overrideFactory;
@@ -33,10 +40,17 @@ class DatabaseHelper {
   @visibleForTesting
   static String? overridePath;
 
-  Future<Database> get database async {
+  Future<Database> get database {
     final Database? existing = _database;
-    if (existing != null && existing.isOpen) return existing;
-    return _database = await _open();
+    if (existing != null && existing.isOpen) return Future<Database>.value(existing);
+    return _opening ??= _open().then((Database db) {
+      _database = db;
+      _opening = null;
+      return db;
+    }, onError: (Object error, StackTrace stackTrace) {
+      _opening = null;
+      throw Error.throwWithStackTrace(error, stackTrace);
+    });
   }
 
   Future<Database> _open() async {
@@ -223,8 +237,14 @@ class DatabaseHelper {
   }
 
   Future<void> close() async {
+    final Future<Database>? opening = _opening;
+    if (opening != null) {
+      // Não deixa uma abertura em andamento reviver a conexão após o close.
+      await opening.then<void>((_) {}, onError: (Object _) {});
+    }
     final Database? db = _database;
     _database = null;
+    _opening = null;
     if (db != null && db.isOpen) await db.close();
   }
 

@@ -1,181 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'home.dart'; 
+import 'package:matchmaster/core/theme/app_theme.dart';
+import 'package:matchmaster/data/match_repository.dart';
+import 'package:matchmaster/data/settings_store.dart';
+import 'package:matchmaster/screens/home_shell.dart';
+import 'package:matchmaster/screens/login_screen.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SettingsStore settings = await SettingsStore.load();
+  runApp(MatchMasterApp(settings: settings));
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
-    );
-  }
-}
+class MatchMasterApp extends StatelessWidget {
+  MatchMasterApp({
+    super.key,
+    required this.settings,
+    MatchRepository? repository,
+  }) : repository = repository ?? MatchRepository();
 
-class CustomAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipPath(
-          clipper: AppBarClipper(),
-          child: Container(
-            height: 240,
-            color: Color(0XFFFFDE5B),
-          ),
-        ),
-        Positioned(
-          child: Center(
-            child: Image.asset(
-              'assets/1.png',
-              width: 250,
-              height: 256,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class AppBarClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height - 50);
-    path.quadraticBezierTo(size.width / 2, size.height, size.width, size.height - 50);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
-
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool _isChecked = false;
+  final SettingsStore settings;
+  final MatchRepository repository;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF1F1F1F),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomAppBar(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: [
-                    SizedBox(height: 10), 
-                    const Text(
-                      'Seja Bem-vindo',
-                      style: TextStyle(fontSize: 32, color: Colors.yellow),
-                      
-                      ),
-                      SizedBox(height: 50,),
-                      
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Login',
-                        hintStyle: TextStyle(color: Color.fromARGB(209, 255, 235, 59)),
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 8, 8, 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 16,
-                        ),
-                      ),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    SizedBox(height: 30),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: 'Senha',
-                        hintStyle: const TextStyle(color: const Color.fromARGB(209, 255, 235, 59)),
-                        filled: true,
-                        fillColor: Color.fromARGB(255, 8, 8, 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 16,
-                        ),
-                      ),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Theme(
-                          data: ThemeData(
-                            checkboxTheme: CheckboxThemeData(
-                              checkColor: MaterialStateProperty.all<Color>(Colors.black),
-                              fillColor: MaterialStateProperty.all<Color>(Colors.yellow),
-                            ),
-                          ),
-                          child: Checkbox(
-                            value: _isChecked,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _isChecked = value ?? false;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'Lembrar de mim',
-                          style: TextStyle(color: Colors.yellow),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 70),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 60),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Entrar',
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                    ),
-                    SizedBox(height: 80),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+    return AppScope(
+      settings: settings,
+      repository: repository,
+      child: AnimatedBuilder(
+        animation: settings,
+        builder: (BuildContext context, _) {
+          return MaterialApp(
+            title: 'MatchMaster',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light(),
+            darkTheme: AppTheme.dark(),
+            themeMode: settings.themeMode,
+            // "Lembrar de mim" agora tem efeito: com a opção marcada o app abre
+            // direto na home em vez de pedir login de novo.
+            home: settings.rememberMe ? const HomeShell() : const LoginScreen(),
+          );
+        },
       ),
     );
   }
+}
+
+/// Injeta as dependências compartilhadas na árvore de widgets.
+///
+/// Mantém as telas testáveis: um teste monta a árvore com um repositório
+/// apontando para um banco em memória.
+class AppScope extends InheritedWidget {
+  const AppScope({
+    super.key,
+    required this.settings,
+    required this.repository,
+    required super.child,
+  });
+
+  final SettingsStore settings;
+  final MatchRepository repository;
+
+  static AppScope of(BuildContext context) {
+    final AppScope? scope =
+        context.dependOnInheritedWidgetOfExactType<AppScope>();
+    assert(scope != null, 'AppScope não encontrado acima deste widget.');
+    return scope!;
+  }
+
+  @override
+  bool updateShouldNotify(AppScope oldWidget) =>
+      settings != oldWidget.settings || repository != oldWidget.repository;
 }
